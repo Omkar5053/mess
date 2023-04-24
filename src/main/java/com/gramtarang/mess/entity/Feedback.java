@@ -12,8 +12,11 @@ public class Feedback {
     private int feedbackId;
 
     private String feedback;
-
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
+    @ManyToOne
+    @JoinColumn(name = "mess_id")
     private Mess mess;
 
     public int getFeedbackId() { return feedbackId; }
@@ -23,13 +26,11 @@ public class Feedback {
 
     public void setFeedback(String feedback) { this.feedback = feedback; }
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
 
-    @ManyToOne
-    @JoinColumn(name = "mess_id")
+
     public Mess getMess() { return mess; }
-    public void setMess(Mess mess) { this.mess = mess; }
+    public void setMess(Mess mess) {this.mess = mess; }
 }

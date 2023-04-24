@@ -9,6 +9,8 @@ public class Mess {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int messId;
     private String messName;
+    @OneToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     public Mess() {
@@ -29,8 +31,7 @@ public class Mess {
     public void setMessName(String messName) {
         this.messName = messName;
     }
-    @OneToOne
-    @JoinColumn(name = "user_id")
+
     public User getUser() {
         return user;
     }

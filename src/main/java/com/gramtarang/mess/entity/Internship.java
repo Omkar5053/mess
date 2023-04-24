@@ -7,7 +7,7 @@ public class Internship {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int internship_id;
 
     private String registrationNumber;
 
@@ -18,16 +18,19 @@ public class Internship {
     private String purpose;
 
     private int noOfDays;
+    @ManyToOne
+    @JoinColumn(name = "mess_id")
     private Mess mess;
-
+    @ManyToOne
+    @JoinColumn(name = "hostel_id")
     private Hostel hostel;
 
-    public int getId() {
-        return id;
+    public int getInternship_id() {
+        return internship_id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setInternship_id(int internship_id) {
+        this.internship_id = internship_id;
     }
 
     public String getRegistrationNumber() {
@@ -77,8 +80,7 @@ public class Internship {
     public void setPurpose(String purpose) {
         this.purpose = purpose;
     }
-    @OneToOne
-    @JoinColumn(name = "mess_id")
+
     public Mess getMess() {
         return mess;
     }
@@ -95,8 +97,7 @@ public class Internship {
         this.noOfDays = noOfDays;
     }
 
-    @OneToOne
-    @JoinColumn(name = "hostel_id")
+
     public Hostel getHostel() {
         return hostel;
     }

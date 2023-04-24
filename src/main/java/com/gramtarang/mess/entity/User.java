@@ -19,7 +19,8 @@ public class User {
     private Date createdAt;
     private Date updatedAt;
     private String password;
-
+    @ManyToOne
+    @JoinColumn(name = "role_id")
     private Role role;
 
 
@@ -33,7 +34,7 @@ public class User {
     public void setUserId(String userId) {
         this.userId = userId;
     }
-    @Enumerated(EnumType.ORDINAL)
+
     public Boolean getActive() {
         return active;
     }
@@ -89,8 +90,7 @@ public class User {
     }
 
 
-    @ManyToOne
-    @JoinColumn(name = "role_id")
+
     public Role getRole() {
         return role;
     }

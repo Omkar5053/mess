@@ -7,14 +7,19 @@ import jakarta.persistence.Id;
 
 @Entity
 public class Hostel {
-
-    private int id;
-    private String hostelName;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    private int hostel_id;
+    private String hostelName;
+
+
+    public int getHostel_id() {
+        return hostel_id;
+    }
+
+    public void setHostel_id(int hostel_id) {
+        this.hostel_id = hostel_id;
+    }
 
     public String getHostelName() { return hostelName; }
 

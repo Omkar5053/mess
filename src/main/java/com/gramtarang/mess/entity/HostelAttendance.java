@@ -9,19 +9,26 @@ public class HostelAttendance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int hostel_attendance_id;
     private Date date;
 
     private Date timeIn;
 
     private Date timeOut;
-
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
+    @ManyToOne
+    @JoinColumn(name = "hostel_id")
     private Hostel hostel;
 
-    public int getId() { return id; }
+    public int getHostel_attendance_id() {
+        return hostel_attendance_id;
+    }
 
-    public void setId(int id) { this.id = id; }
+    public void setHostel_attendance_id(int hostel_attendance_id) {
+        this.hostel_attendance_id = hostel_attendance_id;
+    }
 
     public Date getDate() { return date; }
 
@@ -33,13 +40,11 @@ public class HostelAttendance {
 
     public Date getTimeOut() { return timeOut; }
     public void setTimeOut(Date timeOut) { this.timeOut = timeOut; }
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+
     public User getUser() { return user; }
 
     public void setUser(User user) { this.user = user; }
-    @ManyToOne
-    @JoinColumn(name = "hostel_id")
+
     public Hostel getHostel() { return hostel; }
 
     public void setHostel(Hostel hostel) { this.hostel = hostel; }
