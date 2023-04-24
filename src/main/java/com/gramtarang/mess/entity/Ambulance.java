@@ -27,7 +27,7 @@ public class Ambulance {
 
     public Date getLastMaintenanceDate() { return lastMaintenanceDate; }
     public void setLastMaintenanceDate(Date lastMaintenanceDate) { this.lastMaintenanceDate = lastMaintenanceDate; }
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "user_id")
     public User getUser() { return user; }
 

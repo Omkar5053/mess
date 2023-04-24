@@ -56,7 +56,7 @@ public class Maintenance {
     public void setDate(Date date) {
         this.date = date;
     }
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "user_id")
     public User getUser() {
         return user;
@@ -65,12 +65,12 @@ public class Maintenance {
     public void setUser(User user) {
         this.user = user;
     }
-
+    @ManyToOne
+    @JoinColumn(name = "hostel_id")
     public Hostel getHostel() {
         return hostel;
     }
-    @OneToMany
-    @JoinColumn(name = "hostel_id")
+
     public void setHostel(Hostel hostel) {
         this.hostel = hostel;
     }

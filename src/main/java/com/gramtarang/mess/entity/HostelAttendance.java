@@ -33,12 +33,12 @@ public class HostelAttendance {
 
     public Date getTimeOut() { return timeOut; }
     public void setTimeOut(Date timeOut) { this.timeOut = timeOut; }
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "user_id")
     public User getUser() { return user; }
 
     public void setUser(User user) { this.user = user; }
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "hostel_id")
     public Hostel getHostel() { return hostel; }
 

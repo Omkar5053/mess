@@ -29,7 +29,7 @@ public class Mess {
     public void setMessName(String messName) {
         this.messName = messName;
     }
-    @OneToMany
+    @OneToOne
     @JoinColumn(name = "user_id")
     public User getUser() {
         return user;

@@ -30,7 +30,7 @@ public class MessUser {
     }
 
     public void setFoodType(String foodType) { this.foodType = foodType; }
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "user_id")
     public User getUser() {
         return user;
@@ -40,12 +40,12 @@ public class MessUser {
         this.user = user;
     }
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "hostel_id")
     public Hostel getHostel() { return hostel; }
     public void setHostel(Hostel hostel) { this.hostel = hostel; }
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "mess_mess_id")
     public Mess getMess() { return mess; }
     public void setMess(Mess mess) { this.mess = mess; }

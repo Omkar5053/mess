@@ -20,6 +20,8 @@ public class Internship {
     private int noOfDays;
     private Mess mess;
 
+    private Hostel hostel;
+
     public int getId() {
         return id;
     }
@@ -75,7 +77,7 @@ public class Internship {
     public void setPurpose(String purpose) {
         this.purpose = purpose;
     }
-    @OneToMany
+    @OneToOne
     @JoinColumn(name = "mess_id")
     public Mess getMess() {
         return mess;
@@ -91,5 +93,15 @@ public class Internship {
 
     public void setNoOfDays(int noOfDays) {
         this.noOfDays = noOfDays;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "hostel_id")
+    public Hostel getHostel() {
+        return hostel;
+    }
+
+    public void setHostel(Hostel hostel) {
+        this.hostel = hostel;
     }
 }
