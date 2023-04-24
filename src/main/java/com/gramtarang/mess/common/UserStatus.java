@@ -1,13 +1,13 @@
 package com.gramtarang.mess.common;
 
-public enum UserSatus {
+public enum UserStatus {
     UNDEFINED(0),
     ACTIVE(1),
     INACTIVE(2);
 
     private int id;
 
-    UserSatus(int id) {
+    UserStatus(int id) {
         this.id = id;
     }
 
@@ -18,7 +18,7 @@ public enum UserSatus {
         this.id = id;
     }
 
-    public static UserSatus valueOf(int id) {
+    public static UserStatus valueOf(int id) {
         switch (id) {
             case 1:
                 return ACTIVE;

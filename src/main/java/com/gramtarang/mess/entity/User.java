@@ -1,5 +1,6 @@
 package com.gramtarang.mess.entity;
 
+import com.gramtarang.mess.common.UserStatus;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -11,7 +12,8 @@ public class User {
     private int userId;
 
     private String userName;
-    private Boolean active;
+    @Enumerated(value = EnumType.ORDINAL)
+    private UserStatus active;
     private String email;
     private String firstName;
     private String phoneNo;
@@ -36,12 +38,29 @@ public class User {
         this.userId = userId;
     }
 
-    public Boolean getActive() {
+
+    public UserStatus getActive() {
         return active;
     }
 
-    public void setActive(Boolean active) {
+    public void setActive(UserStatus active) {
         this.active = active;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public String getUserName() {

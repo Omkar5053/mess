@@ -1,5 +1,6 @@
 package com.gramtarang.mess.entity;
 
+import com.gramtarang.mess.enums.MaintenanceType;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -10,8 +11,8 @@ public class Maintenance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int maintenanceId;
-
-    private String maintenanceType;
+    @Enumerated(value = EnumType.ORDINAL)
+    private MaintenanceType maintenanceType;
 
     private String image;
 
@@ -26,13 +27,16 @@ public class Maintenance {
     private Hostel hostel;
 
     public int getMaintenanceId() { return maintenanceId;}
-    public void setMaintenanceId() { this.maintenanceId = maintenanceId; }
 
-    public String getMaintenanceType() {
+    public void setMaintenanceId(int maintenanceId) {
+        this.maintenanceId = maintenanceId;
+    }
+
+    public MaintenanceType getMaintenanceType() {
         return maintenanceType;
     }
 
-    public void setMaintenanceType(String maintenanceType) {
+    public void setMaintenanceType(MaintenanceType maintenanceType) {
         this.maintenanceType = maintenanceType;
     }
 

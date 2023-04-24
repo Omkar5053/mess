@@ -1,5 +1,7 @@
 package com.gramtarang.mess.entity;
 
+import com.gramtarang.mess.enums.LeaveStatus;
+import com.gramtarang.mess.enums.LeaveType;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -10,13 +12,17 @@ public class LeaveData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int leaveId;
-    private String leaveType;
+    @Enumerated(value = EnumType.ORDINAL)
+    private LeaveType leaveType;
     private Date startDate;
     private Date endDate;
     private String reason;
-    private int status;
+    @Enumerated(value = EnumType.ORDINAL)
+    private LeaveStatus status;
     private String parentName;
     private String parentNumber;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     public int getLeaveId() {
@@ -27,13 +33,7 @@ public class LeaveData {
         this.leaveId = leaveId;
     }
 
-    public String getLeaveType() {
-        return leaveType;
-    }
 
-    public void setLeaveType(String leaveType) {
-        this.leaveType = leaveType;
-    }
 
     public Date getStartDate() {
         return startDate;
@@ -59,13 +59,7 @@ public class LeaveData {
         this.reason = reason;
     }
 
-    public int getStatus() {
-        return status;
-    }
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
 
     public String getParentName() {
         return parentName;
@@ -83,8 +77,22 @@ public class LeaveData {
         this.parentNumber = parentNumber;
     }
 
-    @OneToMany
-    @JoinColumn(name = "user_id")
+    public LeaveType getLeaveType() {
+        return leaveType;
+    }
+
+    public void setLeaveType(LeaveType leaveType) {
+        this.leaveType = leaveType;
+    }
+
+    public LeaveStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(LeaveStatus status) {
+        this.status = status;
+    }
+
     public User getUser() {
         return user;
     }
