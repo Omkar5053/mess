@@ -1,5 +1,6 @@
 package com.gramtarang.mess.entity;
 
+import com.gramtarang.mess.common.UserStatus;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -7,10 +8,12 @@ import java.util.Date;
 @Entity
 public class User {
     @Id
-    private String userId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int userId;
 
     private String userName;
-    private Boolean active;
+    @Enumerated(value = EnumType.ORDINAL)
+    private UserStatus active;
     private String email;
     private String firstName;
     private String phoneNo;
@@ -19,27 +22,45 @@ public class User {
     private Date createdAt;
     private Date updatedAt;
     private String password;
-
+    @ManyToOne
+    @JoinColumn(name = "role_id")
     private Role role;
 
 
     public User() {
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
-    @Enumerated(EnumType.ORDINAL)
-    public Boolean getActive() {
+
+
+    public UserStatus getActive() {
         return active;
     }
 
-    public void setActive(Boolean active) {
+    public void setActive(UserStatus active) {
         this.active = active;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public String getUserName() {
@@ -89,8 +110,7 @@ public class User {
     }
 
 
-    @ManyToOne
-    @JoinColumn(name = "role_id")
+
     public Role getRole() {
         return role;
     }

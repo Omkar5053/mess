@@ -6,18 +6,26 @@ import java.util.Date;
 
 @Entity
 public class Ambulance {
-
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int ambulance_id;
 
     private String ambulanceName;
     private String licensePlate;
     private Date lastMaintenanceDate;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+
+
+    public int getAmbulance_id() {
+        return ambulance_id;
+    }
+
+    public void setAmbulance_id(int ambulance_id) {
+        this.ambulance_id = ambulance_id;
+    }
 
     public String getAmbulanceName() { return ambulanceName; }
     public void setAmbulanceName(String ambulanceName) { this.ambulanceName = ambulanceName; }
@@ -27,8 +35,7 @@ public class Ambulance {
 
     public Date getLastMaintenanceDate() { return lastMaintenanceDate; }
     public void setLastMaintenanceDate(Date lastMaintenanceDate) { this.lastMaintenanceDate = lastMaintenanceDate; }
-    @OneToMany
-    @JoinColumn(name = "user_id")
+
     public User getUser() { return user; }
 
     public void setUser(User user) { this.user = user; }

@@ -1,9 +1,6 @@
 package com.gramtarang.mess.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.stream.Stream;
 
@@ -15,8 +12,11 @@ public class Feedback {
     private int feedbackId;
 
     private String feedback;
-
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
+    @ManyToOne
+    @JoinColumn(name = "mess_id")
     private Mess mess;
 
     public int getFeedbackId() { return feedbackId; }
@@ -26,9 +26,11 @@ public class Feedback {
 
     public void setFeedback(String feedback) { this.feedback = feedback; }
 
+
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
 
+
     public Mess getMess() { return mess; }
-    public void setMess(Mess mess) { this.mess = mess; }
+    public void setMess(Mess mess) {this.mess = mess; }
 }

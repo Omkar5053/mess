@@ -1,5 +1,6 @@
 package com.gramtarang.mess.entity;
 
+import com.gramtarang.mess.enums.MaintenanceType;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -10,26 +11,32 @@ public class Maintenance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int maintenanceId;
-
-    private String maintenanceType;
+    @Enumerated(value = EnumType.ORDINAL)
+    private MaintenanceType maintenanceType;
 
     private String image;
 
     private String description;
 
     private Date date;
-
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
+    @ManyToOne
+    @JoinColumn(name = "hostel_id")
     private Hostel hostel;
 
     public int getMaintenanceId() { return maintenanceId;}
-    public void setMaintenanceId() { this.maintenanceId = maintenanceId; }
 
-    public String getMaintenanceType() {
+    public void setMaintenanceId(int maintenanceId) {
+        this.maintenanceId = maintenanceId;
+    }
+
+    public MaintenanceType getMaintenanceType() {
         return maintenanceType;
     }
 
-    public void setMaintenanceType(String maintenanceType) {
+    public void setMaintenanceType(MaintenanceType maintenanceType) {
         this.maintenanceType = maintenanceType;
     }
 
@@ -56,8 +63,7 @@ public class Maintenance {
     public void setDate(Date date) {
         this.date = date;
     }
-    @OneToMany
-    @JoinColumn(name = "user_id")
+
     public User getUser() {
         return user;
     }
@@ -69,8 +75,7 @@ public class Maintenance {
     public Hostel getHostel() {
         return hostel;
     }
-    @OneToMany
-    @JoinColumn(name = "hostel_id")
+
     public void setHostel(Hostel hostel) {
         this.hostel = hostel;
     }
