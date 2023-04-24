@@ -7,7 +7,8 @@ import java.util.Date;
 @Entity
 public class User {
     @Id
-    private String userId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int userId;
 
     private String userName;
     private Boolean active;
@@ -27,11 +28,11 @@ public class User {
     public User() {
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
