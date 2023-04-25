@@ -26,6 +26,10 @@ public class User {
     @JoinColumn(name = "role_id")
     private Role role;
 
+    @ManyToOne
+    @JoinColumn(name = "hostel_id")
+    private Hostel hostel;
+
 
     public User() {
     }
@@ -119,4 +123,11 @@ public class User {
         this.role = role;
     }
 
+    public Hostel getHostel() {
+        return hostel;
+    }
+
+    public void setHostel(Hostel hostel) {
+        this.hostel = hostel;
+    }
 }

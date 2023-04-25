@@ -1,12 +1,15 @@
 package com.gramtarang.mess.controller;
 
 import com.gramtarang.mess.common.MessException;
+import com.gramtarang.mess.common.UserDto;
 import com.gramtarang.mess.common.UserLoginDto;
 import com.gramtarang.mess.entity.User;
+import com.gramtarang.mess.repository.UserRepository;
 import com.gramtarang.mess.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -18,9 +21,12 @@ public class AuthController {
 
 
     private final UserService userService;
+    private final UserRepository userRepository;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService,
+                          UserRepository userRepository) {
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/login")
@@ -47,6 +53,18 @@ public class AuthController {
         request.getSession().removeAttribute("USERID");
         request.getSession().removeAttribute("ROLE-TYPE");
         return new UserLoginDto();
+    }
+
+    @PostMapping("/getStudents")
+    public @ResponseBody
+    List<UserDto> studentsByHostel(@RequestParam(value = "hostel_id") Integer hostel_id,
+                                   HttpServletRequest request)
+    {
+        if(request.getSession().getAttribute("ROLE-TYPE") != "STUDENT")
+        {
+            return userService.getStudentsByHostel(hostel_id);
+        }
+        return null;
     }
 
 
