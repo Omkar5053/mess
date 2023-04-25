@@ -25,6 +25,10 @@ public class LeaveData {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "hostel_id")
+    private Hostel hostel;
+
     public int getLeaveId() {
         return leaveId;
     }
@@ -99,5 +103,12 @@ public class LeaveData {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Hostel getHostel() {
+        return hostel;
+    }
+    public void setHostel(Hostel hostel) {
+        this.hostel = hostel;
     }
 }
