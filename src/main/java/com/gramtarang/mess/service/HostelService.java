@@ -44,7 +44,7 @@ public class HostelService {
         }
     }
 
-    public void delete(int userId, RoleType roleType, Integer hostel_id) {
+    public void delete(int userId, RoleType roleType, Integer hostel_id) throws MessException {
         Optional<User> user = userRepository.findById(userId);
         Optional<Hostel> hostel = hostelRepository.findById(hostel_id);
         try {

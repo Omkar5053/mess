@@ -35,8 +35,7 @@ public class HostelController {
 
     @PostMapping("/delete")
     public @ResponseBody
-    String deleteHostel(@RequestParam(value = "hostel_id") Integer hostel_id, HttpServletRequest request)
-    {
+    String deleteHostel(@RequestParam(value = "hostel_id") Integer hostel_id, HttpServletRequest request) throws MessException {
         String userId = (String) request.getSession().getAttribute("USERID");
         RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         hostelService.delete(Integer.parseInt(userId), roleType, hostel_id);

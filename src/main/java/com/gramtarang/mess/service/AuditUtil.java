@@ -1,6 +1,7 @@
 package com.gramtarang.mess.service;
 // REVIEW PENDING
 
+import com.gramtarang.mess.common.MessException;
 import com.gramtarang.mess.entity.auditlog.AuditLog;
 import com.gramtarang.mess.entity.auditlog.AuditOperation;
 import com.gramtarang.mess.entity.auditlog.Status;
@@ -31,29 +32,17 @@ public class AuditUtil {
         // createAudit(userName, operation, status, logData, AuditOperationPath.UI, null, -1, -1, -1, -1);
     }
 
-    public void createAudit(String userName, AuditOperation operation, Status status, String logData) {
-        createAudit(userName, operation, status, logData, null, -1, -1, -1, -1);
+    public void createAudit(String userName, AuditOperation operation, Status status, String logData) throws MessException {
+        createAudit(userName, operation, status, logData, 0);
     }
 
-    public void createAudit(String userName, AuditOperation operation, Status status, String logData,
-                            String csrNo, long examId, long subjectId, long batchId, long semesterId,
-                            AuditLogDao auditDao) throws EMSException {
+    public void createAudit(String userName, AuditOperation operation, Status status, String logData, int id) throws MessException {
         AuditLog auditLog = new AuditLog();
         auditLog.setLogData(logData);
         auditLog.setLogDate(new Timestamp(new Date().getTime()));
         auditLog.setOperation(operation);
         auditLog.setStatus(status);
         auditLog.setUserName(userName);
-        auditLog.setOperationPath(path);
-        auditLog.setStudentCSRNo(csrNo);
-        if (examId > 0)
-            auditLog.setExamId(examId);
-        if (subjectId > 0)
-            auditLog.setSubjectId(subjectId);
-        if (batchId > 0)
-            auditLog.setBatchId(batchId);
-        if (semesterId > 0)
-            auditLog.setSemesterId(semesterId);
         auditDao.save(auditLog);
         auditDao.flush();
     }

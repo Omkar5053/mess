@@ -36,7 +36,7 @@ public class FeedbackService {
         this.auditLog = auditLog;
     }
 
-    public Feedback addOrEditFeedback(int userId, int feedbackId, int messId, String feedbackData) {
+    public Feedback addOrEditFeedback(int userId, int feedbackId, int messId, String feedbackData) throws MessException {
         Optional<User> user = userRepository.findById(userId);
         Feedback feedback = null;
         try {

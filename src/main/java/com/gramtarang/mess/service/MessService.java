@@ -52,7 +52,7 @@ public class MessService {
         return messUser;
     }
 
-    public MessUser addOrEditStudentDataToMessUser(int messUserId, int userId, RoleType roleType,int messId,int breakfast,int lunch,int dinner) {
+    public MessUser addOrEditStudentDataToMessUser(int messUserId, int userId, RoleType roleType,int messId,int breakfast,int lunch,int dinner) throws MessException {
         Optional<User> user = userRepository.findById(userId);
         Optional<Mess> mess = messRepository.findById(messId);
         MessUser messUser = null;

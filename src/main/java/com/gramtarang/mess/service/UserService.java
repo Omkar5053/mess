@@ -88,7 +88,7 @@ public class UserService {
         return null;
     }
 
-    public String delete(Integer userId) {
+    public String delete(Integer userId) throws MessException {
         Optional<User> user = userRepository.findById(userId);
         if(user.isPresent())
         {
