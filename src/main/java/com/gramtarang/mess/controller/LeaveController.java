@@ -65,4 +65,5 @@ public class LeaveController {
 
         return leaveDataListByHostel;
     }
+
 }

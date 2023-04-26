@@ -1,5 +1,6 @@
 package com.gramtarang.mess.entity;
 
+import com.gramtarang.mess.enums.MaintenanceStatus;
 import com.gramtarang.mess.enums.MaintenanceType;
 import jakarta.persistence.*;
 
@@ -15,6 +16,9 @@ public class Maintenance {
     private MaintenanceType maintenanceType;
 
     private String image;
+
+    @Enumerated(value = EnumType.ORDINAL)
+    private MaintenanceStatus maintenanceStatus;
 
     private String description;
 
@@ -78,5 +82,13 @@ public class Maintenance {
 
     public void setHostel(Hostel hostel) {
         this.hostel = hostel;
+    }
+
+    public MaintenanceStatus getMaintenanceStatus() {
+        return maintenanceStatus;
+    }
+
+    public void setMaintenanceStatus(MaintenanceStatus maintenanceStatus) {
+        this.maintenanceStatus = maintenanceStatus;
     }
 }
