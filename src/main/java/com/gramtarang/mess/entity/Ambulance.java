@@ -1,5 +1,6 @@
 package com.gramtarang.mess.entity;
 
+import com.gramtarang.mess.enums.AmbulanceStatus;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -10,6 +11,8 @@ public class Ambulance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int ambulance_id;
 
+    @Enumerated(value = EnumType.ORDINAL)
+    private AmbulanceStatus ambulanceStatus;
     private String ambulanceName;
     private String licensePlate;
     private Date lastMaintenanceDate;
@@ -39,4 +42,12 @@ public class Ambulance {
     public User getUser() { return user; }
 
     public void setUser(User user) { this.user = user; }
+
+    public AmbulanceStatus getAmbulanceStatus() {
+        return ambulanceStatus;
+    }
+
+    public void setAmbulanceStatus(AmbulanceStatus ambulanceStatus) {
+        this.ambulanceStatus = ambulanceStatus;
+    }
 }
