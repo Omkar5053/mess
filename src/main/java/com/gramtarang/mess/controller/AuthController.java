@@ -70,11 +70,11 @@ public class AuthController {
     public @ResponseBody
     User addUser(@RequestBody User user, HttpServletRequest request)
     {
-        if(request.getSession().getAttribute("ROLE-TYPE") == "ADMIN")
-        {
-            return userService.addUser(user);
-        }
-        return null;
+//        if(request.getSession().getAttribute("ROLE-TYPE") == "ADMIN")
+//        {
+//            return userService.addUser(user);
+//        }
+        return userService.addUser(user);
     }
 
     @PostMapping("/update")
