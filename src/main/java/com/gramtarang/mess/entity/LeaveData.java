@@ -1,5 +1,6 @@
 package com.gramtarang.mess.entity;
 
+import com.gramtarang.mess.common.BaseDto;
 import com.gramtarang.mess.enums.LeaveStatus;
 import com.gramtarang.mess.enums.LeaveType;
 import jakarta.persistence.*;
@@ -7,7 +8,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-public class LeaveData {
+public class LeaveData extends BaseDto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +29,8 @@ public class LeaveData {
     @ManyToOne
     @JoinColumn(name = "hostel_id")
     private Hostel hostel;
+
+    private String remark;
 
     public int getLeaveId() {
         return leaveId;
@@ -110,5 +113,13 @@ public class LeaveData {
     }
     public void setHostel(Hostel hostel) {
         this.hostel = hostel;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

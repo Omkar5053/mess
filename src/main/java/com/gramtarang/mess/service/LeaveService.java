@@ -71,29 +71,15 @@ public class LeaveService {
         return leave;
     }
 
-//    public String deleteFeedback(int userId, RoleType roleType, int feedbackId) throws MessException {
-//        if ((roleType != RoleType.STUDENT) && (roleType != RoleType.MESSINCHARGE)) {
-//            feedbackRepository.deleteById(feedbackId);
-//            return "Success";
-//        } else {
-//            throw new MessException(roleType + " can't delete the data");
-//        }
-//
-//    }
-//
-//    public List<Feedback> listOfFeedbacks(int userId, RoleType roleType, int messId) throws MessException {
-//        List<Feedback> feedbackList = new ArrayList<>();
-//        if ((roleType == RoleType.ADMIN)) {
-//            Mess mess = messRepository.findById(messId).get();
-//            feedbackList = feedbackRepository.findByMess(mess);
-//        } else if (roleType == RoleType.MESSINCHARGE) {
-//            User user = userRepository.findById(userId).get();
-//            Mess mess = messRepository.findByUser(user);
-//            feedbackList = feedbackRepository.findByMess(mess);
-//        } else {
-//            throw new MessException("Couldn't fetch the data");
-//        }
-//        return feedbackList;
-//    }
+    public String deleteLeave(int userId, RoleType roleType, int leaveId) throws MessException {
+        if (roleType != RoleType.ADMIN) {
+            leaveRepository.deleteById(leaveId);
+            return "Success";
+        } else {
+            throw new MessException(roleType + " can't delete the data");
+        }
+
+    }
+
 
 }
