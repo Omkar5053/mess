@@ -3,14 +3,12 @@ package com.gramtarang.mess.service;
 import com.gramtarang.mess.common.MessException;
 import com.gramtarang.mess.entity.Feedback;
 import com.gramtarang.mess.entity.Mess;
-import com.gramtarang.mess.entity.MessUser;
 import com.gramtarang.mess.entity.User;
-import com.gramtarang.mess.enums.RegistrationStatus;
+import com.gramtarang.mess.entity.auditlog.AuditOperation;
+import com.gramtarang.mess.entity.auditlog.Status;
 import com.gramtarang.mess.enums.RoleType;
-import com.gramtarang.mess.enums.UserType;
 import com.gramtarang.mess.repository.FeedbackRepository;
 import com.gramtarang.mess.repository.MessRepository;
-import com.gramtarang.mess.repository.MessUserRepository;
 import com.gramtarang.mess.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,37 +25,61 @@ public class FeedbackService {
     public final UserRepository userRepository;
     @Autowired
     public final MessRepository messRepository;
+    @Autowired
+    public final AuditUtil auditLog;
 
 
-    public FeedbackService(FeedbackRepository feedbackRepository, UserRepository userRepository, MessRepository messRepository) {
+    public FeedbackService(FeedbackRepository feedbackRepository, UserRepository userRepository, MessRepository messRepository, AuditUtil auditLog) {
         this.feedbackRepository = feedbackRepository;
         this.userRepository = userRepository;
         this.messRepository = messRepository;
+        this.auditLog = auditLog;
     }
 
     public Feedback addOrEditFeedback(int userId, int feedbackId, int messId, String feedbackData) {
         Optional<User> user = userRepository.findById(userId);
-        Optional<Mess> mess = messRepository.findById(messId);
         Feedback feedback = null;
-        if (feedbackId == 0) {
-            feedback = new Feedback();
-        } else {
-            feedback = feedbackRepository.findById(feedbackId).get();
+        try {
+            Optional<Mess> mess = messRepository.findById(messId);
+            if (feedbackId == 0) {
+                feedback = new Feedback();
+            } else {
+                feedback = feedbackRepository.findById(feedbackId).get();
+            }
+            feedback.setUser(user.get());
+            feedback.setFeedback(feedbackData);
+            feedback.setMess(mess.get());
+            feedback = feedbackRepository.save(feedback);
+            feedbackRepository.flush();
+            if (feedbackId == 0) {
+                auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.SUCCESS, String.valueOf(user.get()));
+            } else {
+                auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.SUCCESS, String.valueOf(user.get()));
+            }
+        } catch(Exception ex) {
+            if (feedbackId == 0)
+                auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.FAIL, String.valueOf(ex));
+            else
+                auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.FAIL, String.valueOf(ex));
         }
-        feedback.setUser(user.get());
-        feedback.setFeedback(feedbackData);
-        feedback.setMess(mess.get());
-        feedback = feedbackRepository.save(feedback);
-        feedbackRepository.flush();
 
         return feedback;
     }
 
     public String deleteFeedback(int userId, RoleType roleType, int feedbackId) throws MessException {
+        Optional<User> user = userRepository.findById(userId);
+        Optional<Feedback> feedback = feedbackRepository.findById(feedbackId);
         if ((roleType != RoleType.STUDENT) && (roleType != RoleType.MESSINCHARGE)) {
-            feedbackRepository.deleteById(feedbackId);
-            return "Success";
+            try {
+                feedbackRepository.deleteById(feedbackId);
+                auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.SUCCESS, "deleteFeedback:" + "Success: input Data: " + "FeedbackData deleted: " + feedback);
+                return "Success";
+            } catch (Exception ex) {
+                auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.FAIL, "deleteFeedback:" + "Failed: output Data: " + ex + "FeedbackData deleted: " + feedback);
+                return "Fail";
+            }
         } else {
+            auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.FAIL, "deleteFeedback:" + "Failed: output Data: " + "Feedback can't be delete by: " + roleType);
             throw new MessException(roleType + " can't delete the data");
         }
 

@@ -79,8 +79,7 @@ public class AuthController {
 
     @PostMapping("/update")
     public @ResponseBody
-    User updateUser(@RequestBody User user, HttpServletRequest request)
-    {
+    User updateUser(@RequestBody User user, HttpServletRequest request) throws MessException {
         if(request.getSession().getAttribute("ROLE-TYPE") == "ADMIN")
         {
             return userService.updateUser(user);

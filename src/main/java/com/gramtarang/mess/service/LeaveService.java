@@ -2,6 +2,8 @@ package com.gramtarang.mess.service;
 
 import com.gramtarang.mess.common.MessException;
 import com.gramtarang.mess.entity.*;
+import com.gramtarang.mess.entity.auditlog.AuditOperation;
+import com.gramtarang.mess.entity.auditlog.Status;
 import com.gramtarang.mess.enums.LeaveStatus;
 import com.gramtarang.mess.enums.LeaveType;
 import com.gramtarang.mess.enums.RoleType;
@@ -24,18 +26,19 @@ public class LeaveService {
     public final MessRepository messRepository;
     @Autowired
     public final HostelRepository hostelRepository;
-
+    public final AuditUtil auditLog;
     @Autowired
     public final LeaveRepository leaveRepository;
 
 
     public LeaveService(FeedbackRepository feedbackRepository, UserRepository userRepository,
-                        MessRepository messRepository, LeaveRepository leaveRepository, HostelRepository hostelRepository) {
+                        MessRepository messRepository, LeaveRepository leaveRepository, HostelRepository hostelRepository, AuditUtil auditLog) {
         this.feedbackRepository = feedbackRepository;
         this.userRepository = userRepository;
         this.messRepository = messRepository;
         this.leaveRepository = leaveRepository;
         this.hostelRepository = hostelRepository;
+        this.auditLog = auditLog;
     }
 
     public LeaveData addOrEditLeave(int userId, RoleType roleType, int leaveId, int leaveTypeId, Date startDate, Date endDate,
@@ -43,42 +46,59 @@ public class LeaveService {
         Optional<User> user = userRepository.findById(userId);
         LeaveData leave = null;
         if (roleType == RoleType.STUDENT) {
-            if (leaveId == 0) {
-                leave = new LeaveData();
-                leave.setStatus(LeaveStatus.PENDING);
-            } else {
-                leave = leaveRepository.findById(leaveId).get();
-                if ((leave.getStatus() == LeaveStatus.APPROVED) || (leave.getStatus() == LeaveStatus.REJECTED)) {
-                    throw new MessException("Can't update the leave data");
+            try {
+                if (leaveId == 0) {
+                    leave = new LeaveData();
+                    leave.setStatus(LeaveStatus.PENDING);
+                } else {
+                    leave = leaveRepository.findById(leaveId).get();
+                    if ((leave.getStatus() == LeaveStatus.APPROVED) || (leave.getStatus() == LeaveStatus.REJECTED)) {
+                        throw new MessException("Can't update the leave data");
+                    }
                 }
-            }
-            leave.setLeaveType(LeaveType.valueOf(leaveTypeId));
-            leave.setStartDate(startDate);
-            leave.setEndDate(endDate);
-            leave.setReason(reason);
-            leave.setParentName(parentName);
-            leave.setParentNumber(parentPhoneNo);
-            leave.setUser(user.get());
-            Optional<Hostel> hostel = hostelRepository.findById(hostelId);
-            if(hostel != null) {
-                leave.setHostel(hostel.get());
-            }
-            leave = leaveRepository.save(leave);
-            leaveRepository.flush();
+                leave.setLeaveType(LeaveType.valueOf(leaveTypeId));
+                leave.setStartDate(startDate);
+                leave.setEndDate(endDate);
+                leave.setReason(reason);
+                leave.setParentName(parentName);
+                leave.setParentNumber(parentPhoneNo);
+                leave.setUser(user.get());
+                Optional<Hostel> hostel = hostelRepository.findById(hostelId);
+                if (hostel != null) {
+                    leave.setHostel(hostel.get());
+                }
+                leave = leaveRepository.save(leave);
+                leaveRepository.flush();
+                if (leaveId == 0)
+                    auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.SUCCESS, "Created LeaveData :" + leave + "RoleType:" + roleType);
+                else
+                    auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.SUCCESS, "Updated LeaveData :" + leave + "RoleType:" + roleType);
 
+            } catch (Exception ex) {
+                if(leaveId == 0)
+                    auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.FAIL, "Created LeaveData :" + leave + "RoleType:" + roleType + " Exception:" + ex);
+                else
+                    auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.FAIL, "Updated LeaveData :" + leave + "RoleType:" + roleType + " Exception:" + ex);
+            }
         }
 
         return leave;
     }
 
     public String deleteLeave(int userId, RoleType roleType, int leaveId) throws MessException {
+        Optional<User> user = userRepository.findById(userId);
+        Optional<LeaveData> leave = leaveRepository.findById(leaveId);
         if (roleType != RoleType.ADMIN) {
-            leaveRepository.deleteById(leaveId);
-            return "Success";
+            try {
+                leaveRepository.deleteById(leaveId);
+                auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.SUCCESS, "Delete LeaveData :" + leave + "RoleType:" + roleType);
+            } catch(Exception ex) {
+                auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.FAIL, "Delete LeaveData :" + leave + "RoleType:" + roleType + " Exception:" + ex);
+            }
         } else {
             throw new MessException(roleType + " can't delete the data");
         }
-
+        return "Success";
     }
 
     public List<LeaveData> listOfLeavesByStudent(int userId, RoleType roleType) throws MessException {

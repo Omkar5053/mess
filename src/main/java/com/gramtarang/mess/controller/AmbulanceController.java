@@ -2,6 +2,7 @@ package com.gramtarang.mess.controller;
 
 import com.gramtarang.mess.common.MessException;
 import com.gramtarang.mess.entity.Ambulance;
+import com.gramtarang.mess.enums.RoleType;
 import com.gramtarang.mess.service.AmbulanceService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +41,9 @@ public class AmbulanceController {
     Ambulance addRequest(@RequestBody Ambulance ambulance,
                          HttpServletRequest request) throws MessException
     {
-        return ambulanceService.add(ambulance);
+        String userId = (String) request.getSession().getAttribute("USERID");
+        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+        return ambulanceService.add(Integer.parseInt(userId), roleType, ambulance);
     }
 
     @PostMapping("/changeStatus")

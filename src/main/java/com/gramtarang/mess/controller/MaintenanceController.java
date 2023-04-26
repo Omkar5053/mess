@@ -5,6 +5,7 @@ import com.gramtarang.mess.entity.Maintenance;
 import com.gramtarang.mess.enums.MaintenanceStatus;
 import com.gramtarang.mess.enums.MaintenanceType;
 import com.gramtarang.mess.enums.RoleType;
+import com.gramtarang.mess.service.InternshipService;
 import com.gramtarang.mess.service.MaintenanceService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,9 @@ public class MaintenanceController {
     Maintenance addOrUpdate(@RequestBody Maintenance maintenance,
                             HttpServletRequest request) throws MessException
     {
-        return maintenanceService.addOrEdit(maintenance);
+        String userId = (String) request.getSession().getAttribute("USERID");
+        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+        return maintenanceService.addOrEdit(Integer.parseInt(userId), roleType, maintenance);
     }
 
     @PostMapping("/changeStatus")
