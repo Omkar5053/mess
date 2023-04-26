@@ -1,6 +1,8 @@
 package com.gramtarang.mess.entity;
 
 import com.gramtarang.mess.common.UserStatus;
+import com.gramtarang.mess.enums.RoleType;
+import com.gramtarang.mess.enums.UserType;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -22,9 +24,18 @@ public class User {
     private Date createdAt;
     private Date updatedAt;
     private String password;
+    @Enumerated(value = EnumType.ORDINAL)
+    private UserType userType;
+
+    @Enumerated(value = EnumType.ORDINAL)
+    private RoleType roleType;
+
     @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
+    @JoinColumn(name = "hostel_id")
+    private Hostel hostel;
+//    @ManyToOne
+//    @JoinColumn(name = "role_id")
+//    private Role role;
 
 
     public User() {
@@ -109,14 +120,34 @@ public class User {
         this.lastName = lastName;
     }
 
-
-
-    public Role getRole() {
-        return role;
+    public RoleType getRoleType() {
+        return roleType;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoleType(RoleType roleType) {
+        this.roleType = roleType;
+    }
+    //    public Role getRole() {
+//        return role;
+//    }
+//
+//    public void setRole(Role role) {
+//        this.role = role;
+//    }
+
+    public UserType getUserType() {
+        return userType;
     }
 
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
+
+    public Hostel getHostel() {
+        return hostel;
+    }
+
+    public void setHostel(Hostel hostel) {
+        this.hostel = hostel;
+    }
 }

@@ -14,4 +14,15 @@ public enum LeaveType {
     public void setId(int id) {
         this.id = id;
     }
+
+    public static LeaveType valueOf(int id) {
+        switch (id) {
+            case 0:
+                return FORMAL;
+            case 1:
+                return OUTING;
+            default:
+                return FORMAL;
+        }
+    }
 }

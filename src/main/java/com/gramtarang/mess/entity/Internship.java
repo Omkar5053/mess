@@ -7,7 +7,7 @@ public class Internship {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int internship_id;
+    private int internshipId;
 
     private String registrationNumber;
 
@@ -25,12 +25,12 @@ public class Internship {
     @JoinColumn(name = "hostel_id")
     private Hostel hostel;
 
-    public int getInternship_id() {
-        return internship_id;
+    public int getInternshipId() {
+        return internshipId;
     }
 
-    public void setInternship_id(int internship_id) {
-        this.internship_id = internship_id;
+    public void setInternshipId(int internshipId) {
+        this.internshipId = internshipId;
     }
 
     public String getRegistrationNumber() {

@@ -16,4 +16,15 @@ public enum LeaveStatus {
     public void setId(int id) {
         this.id = id;
     }
+
+    public static LeaveStatus valueOf(int id) {
+        switch (id) {
+            case 0:
+                return PENDING;
+            case 2:
+                return APPROVED;
+            default:
+                return REJECTED;
+        }
+    }
 }
