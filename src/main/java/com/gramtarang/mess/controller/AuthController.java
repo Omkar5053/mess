@@ -35,14 +35,14 @@ public class AuthController {
                        HttpServletRequest request) throws MessException {
         User user = userService.authenticateLogin(email, password);
         UserLoginDto dto = new UserLoginDto();
-        if (user.getRole() != null) {
-            dto.setRoleName(user.getRole().getRoleName());
+        if (user.getRoleType() != null) {
+            dto.setRoleName(user.getRoleType().toString());
         } else {
             dto.setRoleName(null);
         }
         dto.setSessionId(String.valueOf(user.getUserId()));
         request.getSession().setAttribute("USERID", user.getUserId());
-        request.getSession().setAttribute("ROLE-NAME", user.getRole().getRoleName());
+        request.getSession().setAttribute("ROLE-NAME", user.getRoleType().toString());
         return dto;
     }
 
@@ -66,6 +66,37 @@ public class AuthController {
         }
         return null;
     }
+    @PostMapping("/add")
+    public @ResponseBody
+    User addUser(@RequestBody User user, HttpServletRequest request)
+    {
+        if(request.getSession().getAttribute("ROLE-TYPE") == "ADMIN")
+        {
+            return userService.addUser(user);
+        }
+        return null;
+    }
 
+    @PostMapping("/update")
+    public @ResponseBody
+    User updateUser(@RequestBody User user, HttpServletRequest request)
+    {
+        if(request.getSession().getAttribute("ROLE-TYPE") == "ADMIN")
+        {
+            return userService.updateUser(user);
+        }
+        return null;
+    }
+    @PostMapping("/deleteFromHostel")
+    public @ResponseBody
+    String deleteUserfromHostel(@RequestParam(value = "userId") Integer userId,
+                                HttpServletRequest request)
+    {
+        if(request.getSession().getAttribute("ROLE-TYPE") != "STUDENT")
+        {
+            return userService.delete(userId);
+        }
+        return null;
+    }
 
 }

@@ -1,10 +1,8 @@
 package com.gramtarang.mess.service;
 
 import com.gramtarang.mess.common.MessException;
-import com.gramtarang.mess.common.UserStatus;
 import com.gramtarang.mess.entity.Mess;
 import com.gramtarang.mess.entity.MessUser;
-import com.gramtarang.mess.entity.Role;
 import com.gramtarang.mess.entity.User;
 import com.gramtarang.mess.enums.RegistrationStatus;
 import com.gramtarang.mess.enums.RoleType;
