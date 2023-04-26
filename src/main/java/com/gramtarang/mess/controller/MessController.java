@@ -36,7 +36,7 @@ public class MessController {
     @PostMapping("/addOrModifyStudentMessUserData")
     public @ResponseBody
     MessUser addOrEditStudentDataToMessUser(@RequestParam("id")int id, @RequestParam("messId")int messId,@RequestParam("breakFast")int breakfast,
-                            @RequestParam("lunch")int lunch, @RequestParam("dinner")int dinner, HttpServletRequest request) {
+                            @RequestParam("lunch")int lunch, @RequestParam("dinner")int dinner, HttpServletRequest request) throws MessException{
         String userId = (String) request.getSession().getAttribute("USERID");
         RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         MessUser messUser = messService.addOrEditStudentDataToMessUser(id, Integer.parseInt(userId), roleType, messId, breakfast, lunch, dinner);

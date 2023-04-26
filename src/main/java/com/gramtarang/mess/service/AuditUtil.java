@@ -16,8 +16,11 @@ import java.util.Date;
 public class AuditUtil {
 //    private static final Logger logger = new Logger(AuditUtil.class);
 
-    @Autowired
-    private AuditLogDao auditDao;
+    private final AuditLogDao auditDao;
+
+    public AuditUtil(AuditLogDao auditDao) {
+        this.auditDao = auditDao;
+    }
 
     /**
      * Creates a record in EMS_Audit_Log table

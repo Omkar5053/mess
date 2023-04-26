@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public interface AuditLogDao extends JpaRepository<AuditLog, Integer>, AuditLogCustomDao {
+public interface AuditLogDao extends JpaRepository<AuditLog, Integer>{
 
     @Query("FROM AuditLog WHERE logDate >= :startDate and logDate <= :endDate")
     List<AuditLog> find(Date startDate, Date endDate);
