@@ -81,5 +81,34 @@ public class LeaveService {
 
     }
 
+    public List<LeaveData> listOfLeavesByStudent(int userId, RoleType roleType) throws MessException {
+        List<LeaveData> leaveDataList = new ArrayList<>();
+        if ((roleType == RoleType.STUDENT)) {
+            Optional<User> user = userRepository.findById(userId);
+            leaveDataList = leaveRepository.findByUser(user.get());
+        }
+        return leaveDataList;
+    }
+
+    public List<LeaveData> listOfLeavesByHostel(int userId, RoleType roleType,int hostelId) throws MessException {
+        List<LeaveData> leaveDataList = new ArrayList<>();
+        Optional<Hostel> hostel = hostelRepository.findById(hostelId);
+        if ((roleType == RoleType.ADMIN) || (roleType == RoleType.CHIEFWARDEN)) {
+            if (hostel != null) {
+                leaveDataList = leaveRepository.findByHostel(hostel.get());
+            }
+        } else if (roleType == RoleType.WARDEN) {
+            List<LeaveData> leaveDataListByHostel = leaveRepository.findByHostel(hostel.get());
+            for (LeaveData leaveData: leaveDataListByHostel) {
+                if (leaveData.getStatus() == LeaveStatus.PENDING) {
+                    leaveData.getActions().add("Approve");
+                    leaveData.getActions().add("Reject");
+                }
+                leaveDataList.add(leaveData);
+            }
+        }
+        return leaveDataList;
+    }
+
 
 }

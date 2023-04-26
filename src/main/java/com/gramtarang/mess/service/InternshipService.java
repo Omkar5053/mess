@@ -60,7 +60,7 @@ public class InternshipService {
     }
 
     public String deleteInternship(int userId, RoleType roleType, int internshipId) throws MessException {
-        if ((roleType == RoleType.ADMIN) || (roleType == RoleType.WARDEN)) {
+        if ((roleType == RoleType.ADMIN) || (roleType == RoleType.WARDEN)){
             internshipRepository.deleteById(internshipId);
             return "Success";
         } else {
