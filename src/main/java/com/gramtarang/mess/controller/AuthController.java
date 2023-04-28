@@ -40,6 +40,7 @@ public class AuthController {
         } else {
             dto.setRoleName(null);
         }
+        dto.setUsername(user.getUserName());
         dto.setSessionId(String.valueOf(user.getUserId()));
         request.getSession().setAttribute("USERID", user.getUserId());
         request.getSession().setAttribute("ROLE-NAME", user.getRoleType().toString());
