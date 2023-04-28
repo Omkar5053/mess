@@ -20,7 +20,6 @@ public class User {
     private String firstName;
     private String phoneNo;
     private String lastName;
-
     private Date createdAt;
     private Date updatedAt;
     private String password;

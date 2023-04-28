@@ -10,5 +10,4 @@ public class MessApplication {
         SpringApplication.run(MessApplication.class, args);
         System.out.println("Welcome to GT-TECH");
     }
-
 }
