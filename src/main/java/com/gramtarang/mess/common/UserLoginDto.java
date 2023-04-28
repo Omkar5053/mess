@@ -1,7 +1,7 @@
 package com.gramtarang.mess.common;
 
 public class UserLoginDto {
-    private String fullName;
+    private String username;
 
     private String sessionId;
 
@@ -11,12 +11,12 @@ public class UserLoginDto {
     }
 
 
-    public String getFullName() {
-        return fullName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getSessionId() {
