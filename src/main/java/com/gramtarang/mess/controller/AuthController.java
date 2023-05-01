@@ -40,6 +40,7 @@ public class AuthController {
         } else {
             dto.setRoleName(null);
         }
+        dto.setUsername(user.getUserName());
         dto.setSessionId(String.valueOf(user.getUserId()));
         request.getSession().setAttribute("USERID", user.getUserId());
         request.getSession().setAttribute("ROLE-NAME", user.getRoleType().toString());
@@ -70,11 +71,11 @@ public class AuthController {
     public @ResponseBody
     User addUser(@RequestBody User user, HttpServletRequest request)
     {
-        if(request.getSession().getAttribute("ROLE-TYPE") == "ADMIN")
-        {
-            return userService.addUser(user);
-        }
-        return null;
+//        if(request.getSession().getAttribute("ROLE-TYPE") == "ADMIN")
+//        {
+//            return userService.addUser(user);
+//        }
+        return userService.addUser(user);
     }
 
     @PostMapping("/update")
