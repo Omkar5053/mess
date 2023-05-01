@@ -16,13 +16,9 @@ import java.util.logging.Logger;
 @RestController
 @RequestMapping(value = "/auth")
 public class AuthController {
-
     private final String ERP_SESSION_COOKIE = "ERPSessionId";
-
-
     private final UserService userService;
     private final UserRepository userRepository;
-
     public AuthController(UserService userService,
                           UserRepository userRepository) {
         this.userService = userService;
