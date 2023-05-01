@@ -18,14 +18,14 @@ public class HostelController {
         this.hostelService = hostelService;
     }
 
-    @PostMapping("/getAll")
+    @PostMapping("/getAllHostels")
     public @ResponseBody
     List<Hostel> getAllHostels(HttpServletRequest request)
     {
         return hostelService.getAll();
     }
 
-    @PostMapping("/add")
+    @PostMapping("/addHostel")
     public @ResponseBody
     Hostel addHostel(@RequestBody Hostel hostel, HttpServletRequest request) throws MessException {
         String userId = (String) request.getSession().getAttribute("USERID");

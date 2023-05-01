@@ -89,8 +89,7 @@ public class AuthController {
     @PostMapping("/deleteFromHostel")
     public @ResponseBody
     String deleteUserfromHostel(@RequestParam(value = "userId") Integer userId,
-                                HttpServletRequest request) throws MessException
-    {
+                                HttpServletRequest request) throws MessException {
         if(request.getSession().getAttribute("ROLE-TYPE") != "STUDENT")
         {
             return userService.delete(userId);

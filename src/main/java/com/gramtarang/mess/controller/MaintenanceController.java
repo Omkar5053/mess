@@ -22,7 +22,7 @@ public class MaintenanceController {
         this.maintenanceService = maintenanceService;
     }
 
-    @PostMapping("/listBy")
+    @PostMapping("/listOfMaintenanceDatByMaintenanceType")
     public @ResponseBody
     List<Maintenance> listOfMaintenance(@RequestParam(value = "maintenanceType")MaintenanceType maintenanceType,
                                         HttpServletRequest request) throws MessException
@@ -30,7 +30,7 @@ public class MaintenanceController {
         return maintenanceService.getList(maintenanceType);
     }
 
-    @PostMapping("/addOrEdit")
+    @PostMapping("/addOrEditMaintenanceDetails")
     public @ResponseBody
     Maintenance addOrUpdate(@RequestBody Maintenance maintenance,
                             HttpServletRequest request) throws MessException
@@ -55,6 +55,7 @@ public class MaintenanceController {
         throw new MessException("Access denied");
     }
 
+    @PostMapping("/getListOfMaintenanceDataByStudent")
     public @ResponseBody
     List<Maintenance> getListByStudent(HttpServletRequest request) throws MessException{
         String userId = (String) request.getSession().getAttribute("USERID");

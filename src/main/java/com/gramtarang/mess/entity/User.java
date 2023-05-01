@@ -15,8 +15,8 @@ public class User {
 
     private String userName;
     @Enumerated(value = EnumType.ORDINAL)
-    private UserStatus active;
-    private String email;
+    private UserStatus isActive;
+    private String emailId;
     private String firstName;
     private String phoneNo;
     private String lastName;
@@ -50,12 +50,12 @@ public class User {
     }
 
 
-    public UserStatus getActive() {
-        return active;
+    public UserStatus getIsActive() {
+        return isActive;
     }
 
-    public void setActive(UserStatus active) {
-        this.active = active;
+    public void setIsActive(UserStatus isActive) {
+        this.isActive = isActive;
     }
 
     public Date getCreatedAt() {
@@ -82,12 +82,12 @@ public class User {
         this.userName = userName;
     }
 
-    public String getEmail() {
-        return email;
+    public String getEmailId() {
+        return emailId;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmailId(String emailId) {
+        this.emailId = emailId;
     }
 
     public String getPhoneNo() { return phoneNo; }

@@ -46,7 +46,7 @@ public class InternshipController {
 
     @PostMapping("/listOfInternshipStudentsByHostel")
     public @ResponseBody
-    List<Internship> listOfInternshipStudentsByHostel(int hostelId, HttpServletRequest request) throws MessException {
+    List<Internship> listOfInternshipStudentsByHostel(@RequestParam("hostelId")int hostelId, HttpServletRequest request) throws MessException {
         String userId = (String) request.getSession().getAttribute("USERID");
         RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         List<Internship> internshipList = internshipService.listOfInternshipStudentsByHostel(Integer.parseInt(userId), roleType, hostelId);
