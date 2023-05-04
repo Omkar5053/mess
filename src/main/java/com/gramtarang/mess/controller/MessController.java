@@ -52,5 +52,4 @@ public class MessController {
         return replyData;
     }
 
-
 }

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.logging.Logger;
 
-
 @RestController
 @RequestMapping(value = "/auth")
 public class AuthController {
@@ -27,7 +26,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public @ResponseBody
-    UserLoginDto login(@RequestParam("loginId") String email, @RequestParam("password") String password,
+    UserLoginDto login(@RequestParam("email") String email, @RequestParam("password") String password,
                        HttpServletRequest request) throws MessException {
         User user = userService.authenticateLogin(email, password);
         UserLoginDto dto = new UserLoginDto();
@@ -54,8 +53,7 @@ public class AuthController {
 
     @PostMapping("/getStudents")
     public @ResponseBody
-    List<UserDto> studentsByHostel(@RequestParam(value = "hostel_id") Integer hostel_id,
-                                   HttpServletRequest request)
+    List<UserDto> studentsByHostel(@RequestParam(value = "hostel_id") Integer hostel_id, HttpServletRequest request)
     {
         if(request.getSession().getAttribute("ROLE-TYPE") != "STUDENT")
         {
