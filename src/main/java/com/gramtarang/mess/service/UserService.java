@@ -48,7 +48,7 @@ public class UserService {
     }
     private UserDto convertToUserDto(User user) {
         UserDto userDto = new UserDto();
-        userDto.setUserStatus(user.getActive().toString());
+        userDto.setUserStatus(user.getIsActive().toString());
         userDto.setEmail(user.getEmail());
         userDto.setRole(user.getRoleType().toString());
         userDto.setFullName(user.getFirstName()+" "+user.getLastName());
@@ -66,7 +66,7 @@ public class UserService {
         {
             try {
                 user1.get().setUserName(user.getUserName());
-                user1.get().setActive(user.getActive());
+                user1.get().setIsActive(user.getIsActive());
                 user1.get().setEmail(user.getEmail());
                 user1.get().setFirstName(user.getFirstName());
                 user1.get().setLastName(user.getLastName());

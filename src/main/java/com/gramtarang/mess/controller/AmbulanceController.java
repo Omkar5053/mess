@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping(value = "/ambulance")
 public class AmbulanceController {
     private final AmbulanceService ambulanceService;
@@ -20,9 +21,9 @@ public class AmbulanceController {
 
     @PostMapping("/listall")
     public @ResponseBody
-    List<Ambulance> listAll(HttpServletRequest request) throws MessException
+    List<Ambulance> listAll(@RequestParam("roleType") RoleType roleType,HttpServletRequest request) throws MessException
     {
-        if(request.getSession().getAttribute("ROLE-TYPE") != "STUDENT")
+        if(roleType.toString() != "STUDENT")
         {
             return ambulanceService.getAll();
         }
@@ -30,31 +31,35 @@ public class AmbulanceController {
     }
     @PostMapping("/getAllRequestsByUser")
     public @ResponseBody
-    List<Ambulance> getAmbulanceListByUser(HttpServletRequest request) throws MessException
+    List<Ambulance> getAmbulanceListByUser(@RequestParam(value = "userId") String userId, HttpServletRequest request) throws MessException
     {
-        String userId = (String) request.getSession().getAttribute("USERID");
+        //String userId = (String) request.getSession().getAttribute("USERID");
         return ambulanceService.getListByUser(Integer.parseInt(userId));
     }
 
     @PostMapping("/add")
     public @ResponseBody
     Ambulance addRequest(@RequestBody Ambulance ambulance,
+                         @RequestParam("userId") String userId,
+                         @RequestParam("roleType") RoleType roleType,
                          HttpServletRequest request) throws MessException
     {
-        String userId = (String) request.getSession().getAttribute("USERID");
-        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+//        String userId = (String) request.getSession().getAttribute("USERID");
+//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         return ambulanceService.add(Integer.parseInt(userId), roleType, ambulance);
     }
 
     @PostMapping("/changeStatus")
     public @ResponseBody
     Ambulance changeStatus(@RequestParam(value = "ambulance_id") int ambulance_id,
+                           @RequestParam("roleType") RoleType roleType,
                            HttpServletRequest request) throws MessException
     {
-        if(request.getSession().getAttribute("ROLE-TYPE") != "STUDENT")
+        if(roleType.toString() != "STUDENT")
         {
             return ambulanceService.changeStatus(ambulance_id);
         }
         throw new MessException("Invalid User");
+
     }
 }

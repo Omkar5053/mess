@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface InternshipRepository extends JpaRepository<Internship, Integer> {
 
-    @Query("from Internship where hostel =: hostel")
+    @Query("from Internship where hostel = :hostel")
     List<Internship> findByHostel(Hostel hostel);
 
 }

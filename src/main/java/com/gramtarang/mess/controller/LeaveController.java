@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping(value = "/leave")
 public class LeaveController {
     private final FeedbackService feedbackService;
@@ -29,9 +30,12 @@ public class LeaveController {
                                     @RequestParam("startDate")Date startDate, @RequestParam("endDate") Date endDate,
                                     @RequestParam("reason")String reason, @RequestParam("leaveStatusId")int leaveStatusId,
                                     @RequestParam("parentName")String parentName, @RequestParam("parentPhoneNo")String parentPhoneNo,
-                                    @RequestParam("hostelId")int hostelId, HttpServletRequest request) throws MessException {
-        String userId = (String) request.getSession().getAttribute("USERID");
-        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+                                    @RequestParam("hostelId")int hostelId,
+                                    @RequestParam("userId") String userId,
+                                    @RequestParam("roleType") RoleType roleType,
+                                    HttpServletRequest request) throws MessException {
+//        String userId = (String) request.getSession().getAttribute("USERID");
+//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         LeaveData leave = leaveService.addOrEditLeave(Integer.parseInt(userId), roleType, leaveId, leaveTypeId, startDate, endDate,
                 reason, parentName, parentPhoneNo, hostelId);
         return leave;
@@ -39,18 +43,24 @@ public class LeaveController {
 
     @PostMapping("/deleteLeave")
     public @ResponseBody
-    String deleteLeave(@RequestParam("leaveId") int leaveId, HttpServletRequest request) throws MessException {
-        String userId = (String) request.getSession().getAttribute("USERID");
-        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+    String deleteLeave(@RequestParam("leaveId") int leaveId,
+                       @RequestParam("userId") String userId,
+                       @RequestParam("roleType") RoleType roleType,
+                       HttpServletRequest request) throws MessException {
+//        String userId = (String) request.getSession().getAttribute("USERID");
+//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         String replyData = leaveService.deleteLeave(Integer.parseInt(userId), roleType, leaveId);
         return replyData;
     }
 
     @PostMapping("/listOfLeavesByStudent")
     public @ResponseBody
-    List<LeaveData> listOfLeavesByStudent(HttpServletRequest request) throws MessException {
-        String userId = (String) request.getSession().getAttribute("USERID");
-        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+    List<LeaveData> listOfLeavesByStudent(
+            @RequestParam("userId") String userId,
+            @RequestParam("roleType") RoleType roleType,
+            HttpServletRequest request) throws MessException {
+//        String userId = (String) request.getSession().getAttribute("USERID");
+//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         List<LeaveData> leaveDataList = leaveService.listOfLeavesByStudent(Integer.parseInt(userId), roleType);
 
         return leaveDataList;
@@ -58,9 +68,12 @@ public class LeaveController {
 
     @PostMapping("/listOfLeavesByHostel")
     public @ResponseBody
-    List<LeaveData> listOfLeavesByHostel(@RequestParam("hostelId")int hostelId, HttpServletRequest request) throws MessException {
-        String userId = (String) request.getSession().getAttribute("USERID");
-        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+    List<LeaveData> listOfLeavesByHostel(@RequestParam("hostelId")int hostelId,
+                                         @RequestParam("userId") String userId,
+                                         @RequestParam("roleType") RoleType roleType,
+                                         HttpServletRequest request) throws MessException {
+//        String userId = (String) request.getSession().getAttribute("USERID");
+//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         List<LeaveData> leaveDataListByHostel = leaveService.listOfLeavesByHostel(Integer.parseInt(userId), roleType, hostelId);
 
         return leaveDataListByHostel;

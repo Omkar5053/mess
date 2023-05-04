@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping(value = "/maintenance")
 public class MaintenanceController {
 
@@ -22,7 +23,7 @@ public class MaintenanceController {
         this.maintenanceService = maintenanceService;
     }
 
-    @PostMapping("/listBy")
+    @PostMapping("/listOfMaintenanceDatByMaintenanceType")
     public @ResponseBody
     List<Maintenance> listOfMaintenance(@RequestParam(value = "maintenanceType")MaintenanceType maintenanceType,
                                         HttpServletRequest request) throws MessException
@@ -30,13 +31,15 @@ public class MaintenanceController {
         return maintenanceService.getList(maintenanceType);
     }
 
-    @PostMapping("/addOrEdit")
+    @PostMapping("/addOrEditMaintenanceDetails")
     public @ResponseBody
     Maintenance addOrUpdate(@RequestBody Maintenance maintenance,
+                            @RequestParam("userId") String userId,
+                            @RequestParam("roleType") RoleType roleType,
                             HttpServletRequest request) throws MessException
     {
-        String userId = (String) request.getSession().getAttribute("USERID");
-        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+//        String userId = (String) request.getSession().getAttribute("USERID");
+//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         return maintenanceService.addOrEdit(Integer.parseInt(userId), roleType, maintenance);
     }
 
@@ -45,9 +48,9 @@ public class MaintenanceController {
     Maintenance changeStatus(@RequestParam(value = "maintenanceStatus")MaintenanceStatus maintenanceStatus,
                              @RequestParam(value = "userId") Integer userId,
                              @RequestParam(value = "maintenanceId") Integer maintenanceId,
+                             @RequestParam("roleType") RoleType roleType,
                              HttpServletRequest request) throws MessException
     {
-        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         if(roleType.toString() != "STUDENT")
         {
             return maintenanceService.changeStatus(maintenanceStatus, userId, maintenanceId);
@@ -55,9 +58,11 @@ public class MaintenanceController {
         throw new MessException("Access denied");
     }
 
+    @PostMapping("/getListOfMaintenanceDataByStudent")
     public @ResponseBody
-    List<Maintenance> getListByStudent(HttpServletRequest request) throws MessException{
-        String userId = (String) request.getSession().getAttribute("USERID");
+    List<Maintenance> getListByStudent(@RequestParam("userId") String userId,
+                                         HttpServletRequest request) throws MessException{
+//        String userId = (String) request.getSession().getAttribute("USERID");
         return maintenanceService.getAllList(Integer.parseInt(userId));
     }
 }

@@ -15,7 +15,7 @@ public class User {
 
     private String userName;
     @Enumerated(value = EnumType.ORDINAL)
-    private UserStatus active;
+    private UserStatus isActive;
     private String email;
     private String firstName;
     private String phoneNo;
@@ -49,12 +49,12 @@ public class User {
     }
 
 
-    public UserStatus getActive() {
-        return active;
+    public UserStatus getIsActive() {
+        return isActive;
     }
 
-    public void setActive(UserStatus active) {
-        this.active = active;
+    public void setIsActive(UserStatus isActive) {
+        this.isActive = isActive;
     }
 
     public Date getCreatedAt() {

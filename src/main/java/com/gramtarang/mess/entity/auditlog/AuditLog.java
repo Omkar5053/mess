@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "EMS_Audit_Log")
+@Table(name = "Audit_Log")
 public class AuditLog {
     private long id;
     private AuditOperation operation;
