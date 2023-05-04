@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping(value = "/internship")
 public class InternshipController {
     private final InternshipService internshipService;
@@ -23,13 +24,21 @@ public class InternshipController {
     }
 
     @PostMapping("/addOrEditInternship")
-    public Internship addOrEditInternship(@RequestParam("internshipId")int internshipId, @RequestParam("registrationNo")String registrationNo,
-                                    @RequestParam("name")String name, @RequestParam("phoneNo")String phoneNo,
-                                    @RequestParam("emailId")String emailId, @RequestParam("campus")String campus,
-                                    @RequestParam("purpose")String purpose, @RequestParam("noOfDays")int noOfDays,
-                                    @RequestParam("hostelId")int hostelId,@RequestParam("messId")int messId, HttpServletRequest request) throws MessException {
-        String userId = (String) request.getSession().getAttribute("USERID");
-        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+    public Internship addOrEditInternship(@RequestParam("internshipId")int internshipId,
+                                          @RequestParam("registrationNo")String registrationNo,
+                                          @RequestParam("name")String name,
+                                          @RequestParam("phoneNo")String phoneNo,
+                                          @RequestParam("emailId")String emailId,
+                                          @RequestParam("campus")String campus,
+                                          @RequestParam("purpose")String purpose,
+                                          @RequestParam("noOfDays")int noOfDays,
+                                          @RequestParam("hostelId")int hostelId,
+                                          @RequestParam("messId")int messId,
+                                          @RequestParam("userId") String userId,
+                                          @RequestParam("roleType") RoleType roleType,
+                                          HttpServletRequest request) throws MessException {
+//        String userId = (String) request.getSession().getAttribute("USERID");
+//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         Internship internshipData = internshipService.addOrEditInternship(Integer.parseInt(userId), roleType, internshipId, registrationNo, name, phoneNo,
                 emailId, campus, purpose,noOfDays, hostelId, messId);
         return internshipData;
@@ -37,18 +46,24 @@ public class InternshipController {
 
     @PostMapping("/deleteInternship")
     public @ResponseBody
-    String deleteInternship(@RequestParam("internshipId") int internshipId, HttpServletRequest request) throws MessException {
-        String userId = (String) request.getSession().getAttribute("USERID");
-        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+    String deleteInternship(@RequestParam("internshipId") int internshipId,
+                            @RequestParam("userId") String userId,
+                            @RequestParam("roleType") RoleType roleType,
+                            HttpServletRequest request) throws MessException {
+//        String userId = (String) request.getSession().getAttribute("USERID");
+//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         String replyData = internshipService.deleteInternship(Integer.parseInt(userId), roleType, internshipId);
         return replyData;
     }
 
     @PostMapping("/listOfInternshipStudentsByHostel")
     public @ResponseBody
-    List<Internship> listOfInternshipStudentsByHostel(@RequestParam("hostelId")int hostelId, HttpServletRequest request) throws MessException {
-        String userId = (String) request.getSession().getAttribute("USERID");
-        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+    List<Internship> listOfInternshipStudentsByHostel(@RequestParam("hostelId")int hostelId,
+                                                      @RequestParam("userId") String userId,
+                                                      @RequestParam("roleType") RoleType roleType,
+                                                      HttpServletRequest request) throws MessException {
+//        String userId = (String) request.getSession().getAttribute("USERID");
+//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         List<Internship> internshipList = internshipService.listOfInternshipStudentsByHostel(Integer.parseInt(userId), roleType, hostelId);
 
         return internshipList;

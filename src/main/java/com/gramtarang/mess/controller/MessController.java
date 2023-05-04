@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping(value = "/mess")
 public class MessController {
     private final MessService messService;
@@ -25,9 +26,11 @@ public class MessController {
     @PostMapping("/listOfStudentsByUserType")
     public @ResponseBody
     List<MessUser> listOfStudentsByUserType(@RequestParam("userType") String userType,
+                                            @RequestParam("userId") String userId,
+                                            @RequestParam("roleType") RoleType roleType,
                                             HttpServletRequest request) throws MessException {
-        String userId = (String) request.getSession().getAttribute("USERID");
-        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+//        String userId = (String) request.getSession().getAttribute("USERID");
+//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         List<MessUser> messUserList = messService.listOfStudentsByUserType(Integer.parseInt(userId), userType, roleType);
 
         return messUserList;
@@ -37,18 +40,23 @@ public class MessController {
     public @ResponseBody
     MessUser addOrEditStudentDataToMessUser(@RequestParam("id")int id, @RequestParam("messId")int messId,
                                             @RequestParam("breakFast")int breakfast,
+                                            @RequestParam("userId") String userId,
+                                            @RequestParam("roleType") RoleType roleType,
                             @RequestParam("lunch")int lunch, @RequestParam("dinner")int dinner, HttpServletRequest request) throws MessException {
-        String userId = (String) request.getSession().getAttribute("USERID");
-        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+//        String userId = (String) request.getSession().getAttribute("USERID");
+//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         MessUser messUser = messService.addOrEditStudentDataToMessUser(id, Integer.parseInt(userId), roleType, messId, breakfast, lunch, dinner);
         return messUser;
     }
 
     @PostMapping("/deleteStudentMessUserData")
     public @ResponseBody
-    String deleteStudentMessUserData(@RequestParam("messUserId") int messUserId, HttpServletRequest request) throws MessException {
-        String userId = (String) request.getSession().getAttribute("USERID");
-        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+    String deleteStudentMessUserData(@RequestParam("messUserId") int messUserId,
+                                     @RequestParam("userId") String userId,
+                                     @RequestParam("roleType") RoleType roleType,
+                                     HttpServletRequest request) throws MessException {
+//        String userId = (String) request.getSession().getAttribute("USERID");
+//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         String replyData = messService.deleteStudentMessUserData(Integer.parseInt(userId), roleType, messUserId);
         return replyData;
     }
