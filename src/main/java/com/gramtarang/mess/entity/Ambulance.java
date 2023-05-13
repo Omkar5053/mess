@@ -1,5 +1,7 @@
 package com.gramtarang.mess.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.gramtarang.mess.enums.AmbulanceStatus;
 import jakarta.persistence.*;
 
@@ -17,6 +19,8 @@ public class Ambulance {
     private String licensePlate;
     private Date lastMaintenanceDate;
     @ManyToOne
+//    @JsonManagedReference
+    @JsonIgnore
     @JoinColumn(name = "user_id")
     private User user;
 
