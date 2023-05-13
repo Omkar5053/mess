@@ -37,6 +37,11 @@ public class MessService {
         this.auditLog = auditLog;
     }
 
+    public List<Mess> listOfMessData() {
+        List<Mess> messList = messRepository.findAll();
+        return messList;
+    }
+
     public List<MessUser> listOfStudentsByUserType(int userId, String userType, RoleType roleType) throws MessException {
         Optional<User> user = userRepository.findById(userId);
         List<MessUser> messUser = new ArrayList<>();

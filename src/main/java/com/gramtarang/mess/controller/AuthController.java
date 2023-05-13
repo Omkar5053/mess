@@ -33,7 +33,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public @ResponseBody
-    UserLoginDto login(@RequestParam("loginId") String email, @RequestParam("password") String password,
+    UserLoginDto login(@RequestParam("email") String email, @RequestParam("password") String password,
                        HttpServletRequest request) throws MessException {
         User user = userService.authenticateLogin(email, password);
         UserLoginDto dto = new UserLoginDto();

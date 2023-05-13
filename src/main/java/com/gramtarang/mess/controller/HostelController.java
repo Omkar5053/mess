@@ -32,6 +32,8 @@ public class HostelController {
                      @RequestParam("userId") String userId,
                      @RequestParam("roleType") RoleType roleType,
                      HttpServletRequest request) throws MessException {
+
+
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         return hostelService.add(Integer.parseInt(userId),roleType, hostel);
