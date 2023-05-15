@@ -69,4 +69,11 @@ public class InternshipController {
         return internshipList;
     }
 
+    @PostMapping("/listOfInternships")
+    public @ResponseBody
+    List<Internship> listOfInternshipStudents(HttpServletRequest request) throws MessException {
+        List<Internship> internshipList = internshipService.listOfInternshipStudents();
+        return internshipList;
+    }
+
 }

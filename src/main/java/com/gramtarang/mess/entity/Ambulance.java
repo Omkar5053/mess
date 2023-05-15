@@ -20,7 +20,7 @@ public class Ambulance {
     private Date lastMaintenanceDate;
     @ManyToOne
 //    @JsonManagedReference
-    @JsonIgnore
+//    @JsonIgnore
     @JoinColumn(name = "user_id")
     private User user;
 

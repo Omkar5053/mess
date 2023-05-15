@@ -2,6 +2,7 @@ package com.gramtarang.mess.service;
 
 import com.gramtarang.mess.common.MessException;
 import com.gramtarang.mess.entity.Feedback;
+import com.gramtarang.mess.entity.Internship;
 import com.gramtarang.mess.entity.Mess;
 import com.gramtarang.mess.entity.User;
 import com.gramtarang.mess.entity.auditlog.AuditOperation;
@@ -100,4 +101,9 @@ public class FeedbackService {
         return feedbackList;
     }
 
+
+    public List<Feedback> listOfFeedbacks() {
+        List<Feedback> feedbackList = feedbackRepository.findAll();
+        return feedbackList;
+    }
 }

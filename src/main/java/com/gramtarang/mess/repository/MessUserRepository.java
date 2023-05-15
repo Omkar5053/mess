@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface MessUserRepository extends JpaRepository<MessUser, Integer> {
 
-    @Query("from MessUser where user.userType = :userType")
+//    @Query("from MessUser as m where m.user.userType = :userType")
     List<MessUser> findByUserUserType(UserType userType);
 }

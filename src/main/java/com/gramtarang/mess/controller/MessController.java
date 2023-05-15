@@ -2,16 +2,14 @@ package com.gramtarang.mess.controller;
 
 import com.gramtarang.mess.common.MessException;
 import com.gramtarang.mess.common.UserLoginDto;
-import com.gramtarang.mess.entity.Feedback;
-import com.gramtarang.mess.entity.Mess;
-import com.gramtarang.mess.entity.MessUser;
-import com.gramtarang.mess.entity.User;
+import com.gramtarang.mess.entity.*;
 import com.gramtarang.mess.enums.RoleType;
 import com.gramtarang.mess.service.MessService;
 import com.gramtarang.mess.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.relation.Role;
 import java.util.List;
 
 @RestController
@@ -23,15 +21,19 @@ public class MessController {
         this.messService = messService;
     }
 
+    @PostMapping("/listOfAllMess")
+    public @ResponseBody
+    List<Mess> listOfAllMessData(HttpServletRequest request) {
+        List<Mess> messList = messService.listOfMessData();
+        return messList;
+    }
+
     @PostMapping("/listOfStudentsByUserType")
     public @ResponseBody
-    List<MessUser> listOfStudentsByUserType(@RequestParam("userType") String userType,
-                                            @RequestParam("userId") String userId,
-                                            @RequestParam("roleType") RoleType roleType,
-                                            HttpServletRequest request) throws MessException {
-//        String userId = (String) request.getSession().getAttribute("USERID");
-//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
-        List<MessUser> messUserList = messService.listOfStudentsByUserType(Integer.parseInt(userId), userType, roleType);
+    List<MessUser> listOfStudentsByUserType(@RequestParam("userType") String userType,@RequestParam("userId")String userId,
+                                            @RequestParam("roleType")String roleType, HttpServletRequest request) throws MessException {
+
+        List<MessUser> messUserList = messService.listOfStudentsByUserType(Integer.parseInt(userId), userType, RoleType.valueOf(roleType));
 
         return messUserList;
     }
@@ -40,26 +42,46 @@ public class MessController {
     public @ResponseBody
     MessUser addOrEditStudentDataToMessUser(@RequestParam("id")int id, @RequestParam("messId")int messId,
                                             @RequestParam("breakFast")int breakfast,
-                                            @RequestParam("userId") String userId,
-                                            @RequestParam("roleType") RoleType roleType,
                             @RequestParam("lunch")int lunch, @RequestParam("dinner")int dinner, HttpServletRequest request) throws MessException {
-//        String userId = (String) request.getSession().getAttribute("USERID");
-//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+        String userId = (String) request.getSession().getAttribute("USERID");
+        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         MessUser messUser = messService.addOrEditStudentDataToMessUser(id, Integer.parseInt(userId), roleType, messId, breakfast, lunch, dinner);
         return messUser;
     }
 
     @PostMapping("/deleteStudentMessUserData")
     public @ResponseBody
-    String deleteStudentMessUserData(@RequestParam("messUserId") int messUserId,
-                                     @RequestParam("userId") String userId,
-                                     @RequestParam("roleType") RoleType roleType,
-                                     HttpServletRequest request) throws MessException {
-//        String userId = (String) request.getSession().getAttribute("USERID");
-//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+    String deleteStudentMessUserData(@RequestParam("messUserId") int messUserId, HttpServletRequest request) throws MessException {
+        String userId = (String) request.getSession().getAttribute("USERID");
+        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         String replyData = messService.deleteStudentMessUserData(Integer.parseInt(userId), roleType, messUserId);
         return replyData;
     }
+
+
+    @PostMapping("/addOrUpdateMess")
+    public @ResponseBody
+    Mess addOrUpdateHostel(@RequestParam("messName")String messName,
+                     @RequestParam("messId") int messId,
+                     @RequestParam("userId") int userId,
+                     @RequestParam("roleType") RoleType roleType,
+                     HttpServletRequest request) throws MessException {
+        return messService.addOrUpdateMess(userId,roleType, messId, messName);
+    }
+
+    @PostMapping("/deleteMess")
+    public @ResponseBody
+    String deleteHostel(@RequestParam(value = "messId") Integer messId,
+                        @RequestParam("userId") String userId,
+                        @RequestParam("roleType") RoleType roleType,
+                        HttpServletRequest request) throws MessException {
+//        String userId = (String) request.getSession().getAttribute("USERID");
+//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+        messService.delete(Integer.parseInt(userId), roleType, messId);
+        return "DELETE SUCCESSFULLY";
+    }
+
+
 
 
 }

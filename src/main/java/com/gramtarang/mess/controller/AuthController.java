@@ -7,7 +7,10 @@ import com.gramtarang.mess.entity.User;
 import com.gramtarang.mess.enums.RoleType;
 import com.gramtarang.mess.repository.UserRepository;
 import com.gramtarang.mess.service.UserService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +21,7 @@ import java.util.logging.Logger;
 @CrossOrigin("*")
 @RequestMapping(value = "/auth")
 public class AuthController {
-
+    public static final Logger logger = Logger.getLogger(String.valueOf(AuthController.class));
     private final String ERP_SESSION_COOKIE = "ERPSessionId";
 
 
@@ -34,7 +37,7 @@ public class AuthController {
     @PostMapping("/login")
     public @ResponseBody
     UserLoginDto login(@RequestParam("loginId") String email, @RequestParam("password") String password,
-                       HttpServletRequest request) throws MessException {
+                       HttpSession session, HttpServletResponse response) throws MessException {
         User user = userService.authenticateLogin(email, password);
         UserLoginDto dto = new UserLoginDto();
         if (user.getRoleType() != null) {
@@ -44,8 +47,12 @@ public class AuthController {
         }
         dto.setUsername(user.getUserName());
         dto.setSessionId(String.valueOf(user.getUserId()));
-        request.getSession().setAttribute("USERID", user.getUserId());
-        request.getSession().setAttribute("ROLE-NAME", user.getRoleType().toString());
+        session.setAttribute("UserId", user.getUserId());
+        session.setAttribute("RoleName", user.getRoleType());
+//        request.getSession().setAttribute("USERID", user.getUserId());
+//        request.getSession().setAttribute("ROLE-NAME", user.getRoleType().toString());
+//        logger.info("UserId:" + request.getAttribute("USERID"));
+//        logger.info("ROLE-NAME" + request.getSession().getAttribute("ROLE-NAME"));
         return dto;
     }
 

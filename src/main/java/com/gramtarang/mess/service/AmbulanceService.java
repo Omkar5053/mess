@@ -57,4 +57,15 @@ public class AmbulanceService {
         }
         throw new MessException("Error");
     }
+
+    public void delete(int userId, RoleType roleType, int ambulanceId) throws MessException{
+        Optional<User> user = userRepository.findById(userId);
+        Optional<Ambulance> ambulance = ambulanceRepository.findById(ambulanceId);
+        try {
+            ambulanceRepository.deleteById(ambulanceId);
+            auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.SUCCESS, "Deleted AmbulanceData :" + ambulance + "RoleType:" + roleType);
+        } catch (Exception ex) {
+            auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.FAIL, "Deleted AmbulanceData :" + ambulance + "RoleType:" + roleType + " Exception:" + ex);
+        }
+    }
 }

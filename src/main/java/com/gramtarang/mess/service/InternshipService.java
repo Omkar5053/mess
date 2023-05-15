@@ -15,9 +15,11 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 public class InternshipService {
+    public static final Logger logger = Logger.getLogger(String.valueOf(InternshipService.class));
     @Autowired
     public final UserRepository userRepository;
     @Autowired
@@ -92,12 +94,18 @@ public class InternshipService {
 
     public List<Internship> listOfInternshipStudentsByHostel(int userId, RoleType roleType, int hostelId) throws MessException {
         List<Internship> internshipList = new ArrayList<>();
+
         if ((roleType != RoleType.STUDENT)) {
             Optional<Hostel> hostel = hostelRepository.findById(hostelId);
+            logger.info("HostelData:" +hostel);
             internshipList = internshipRepository.findByHostel(hostel.get());
         }
         return internshipList;
     }
 
+    public List<Internship> listOfInternshipStudents() {
+        List<Internship> internshipList = internshipRepository.findAll();
+        return internshipList;
+    }
 
 }

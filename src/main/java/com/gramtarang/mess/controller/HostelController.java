@@ -28,13 +28,14 @@ public class HostelController {
 
     @PostMapping("/addHostel")
     public @ResponseBody
-    Hostel addHostel(@RequestBody Hostel hostel,
+    Hostel addHostel(@RequestParam("hostelName")String hostelName,
+                     @RequestParam("hostelId") int hostelId,
                      @RequestParam("userId") String userId,
                      @RequestParam("roleType") RoleType roleType,
                      HttpServletRequest request) throws MessException {
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
-        return hostelService.add(Integer.parseInt(userId),roleType, hostel);
+        return hostelService.add(Integer.parseInt(userId),roleType, hostelId, hostelName);
     }
 
     @PostMapping("/delete")

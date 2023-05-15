@@ -1,6 +1,7 @@
 package com.gramtarang.mess.service;
 
 import com.gramtarang.mess.common.MessException;
+import com.gramtarang.mess.entity.Hostel;
 import com.gramtarang.mess.entity.Mess;
 import com.gramtarang.mess.entity.MessUser;
 import com.gramtarang.mess.entity.User;
@@ -18,9 +19,11 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 public class MessService {
+    public static final Logger logger = Logger.getLogger(MessService.class.toString());
     @Autowired
     public final MessRepository messRepository;
     @Autowired
@@ -37,11 +40,73 @@ public class MessService {
         this.auditLog = auditLog;
     }
 
+    public List<Mess> listOfMessData() {
+        List<Mess> messList = messRepository.findAll();
+        return messList;
+    }
+
+
+    public Mess addOrUpdateMess(int userId, RoleType roleType, int messId, String messName) throws MessException {
+        Optional<User> user = userRepository.findById(userId);
+        int status = 0;
+        Mess mess = null;
+        try {
+            if (messId == 0) {
+                mess = messRepository.findByMessName(messName);
+                if (mess == null) {
+                    mess = new Mess();
+                    status = 1;
+                } else {
+                    throw new MessException("Already " + messName + " exists");
+                }
+            } else {
+               mess = messRepository.findById(messId).get();
+               status = 2;
+            }
+            mess.setMessName(messName);
+            mess.setUser(user.get());
+            messRepository.save(mess);
+            messRepository.flush();
+            if (status == 1) {
+                auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.SUCCESS, "Created MessData :" + mess + "RoleType:" + roleType);
+            } else {
+                auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.SUCCESS, "Updated MessData :" + mess + "RoleType:" + roleType);
+            }
+            return mess;
+        } catch (Exception ex) {
+            if (status == 1) {
+                auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.FAIL, "Created MessData :" + mess + "RoleType:" + roleType);
+            } else {
+                auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.FAIL, "Updated MessData :" + mess + "RoleType:" + roleType);
+            }            throw new MessException(String.valueOf(ex));
+        }
+    }
+
+    public void delete(int userId, RoleType roleType, Integer messId) throws MessException {
+        Optional<User> user = userRepository.findById(userId);
+        Optional<Mess> mess = messRepository.findById(messId);
+        try {
+            messRepository.deleteById(messId);
+            auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.SUCCESS, "Deleted MessData :" + mess + "RoleType:" + roleType);
+        } catch (Exception ex) {
+            auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.FAIL, "Deleted MessData :" + mess + "RoleType:" + roleType + " Exception:" + ex);
+        }
+    }
+
     public List<MessUser> listOfStudentsByUserType(int userId, String userType, RoleType roleType) throws MessException {
+        logger.info("Entered to listOfStudentsByUserType");
+        logger.info("UserId:" +userId);
+        logger.info("UserType:" + userType);
+        logger.info("RoleType:" +roleType);
         Optional<User> user = userRepository.findById(userId);
         List<MessUser> messUser = new ArrayList<>();
         if ((roleType == RoleType.ADMIN) || (roleType == RoleType.CHIEFWARDEN) || (roleType == RoleType.WARDEN)) {
-            messUser = messUserRepository.findByUserUserType(UserType.valueOf(userType));
+            logger.info("UserType:" + UserType.valueOf(userType));
+            List<MessUser> messUserList =  messUserRepository.findByUserUserType(UserType.valueOf(userType));
+            for (MessUser messUser1: messUserList) {
+                messUser.add(messUser1);
+            }
+            logger.info("MessUser:" + messUser);
         } else {
             throw new MessException("Chosen wrong RoleType");
         }
