@@ -10,6 +10,7 @@ public class MessApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(MessApplication.class, args);
+        System.out.println("Welcome to Gramtarang Technologies Private Limited!");
     }
-
 }
+

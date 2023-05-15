@@ -50,6 +50,7 @@ public class InternshipController {
                             @RequestParam("userId") String userId,
                             @RequestParam("roleType") RoleType roleType,
                             HttpServletRequest request) throws MessException {
+
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         String replyData = internshipService.deleteInternship(Integer.parseInt(userId), roleType, internshipId);
@@ -58,13 +59,14 @@ public class InternshipController {
 
     @PostMapping("/listOfInternshipStudentsByHostel")
     public @ResponseBody
-    List<Internship> listOfInternshipStudentsByHostel(@RequestParam("hostelId")int hostelId,
+    List<Internship> listOfInternshipStudentsByHostel(@RequestParam("hostelId")int hostel_id,
                                                       @RequestParam("userId") String userId,
                                                       @RequestParam("roleType") RoleType roleType,
                                                       HttpServletRequest request) throws MessException {
+
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
-        List<Internship> internshipList = internshipService.listOfInternshipStudentsByHostel(Integer.parseInt(userId), roleType, hostelId);
+        List<Internship> internshipList = internshipService.listOfInternshipStudentsByHostel(Integer.parseInt(userId), roleType, hostel_id);
 
         return internshipList;
     }
