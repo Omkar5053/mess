@@ -5,6 +5,7 @@ import com.gramtarang.mess.entity.Ambulance;
 import com.gramtarang.mess.enums.RoleType;
 import com.gramtarang.mess.service.AmbulanceService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,21 +14,22 @@ import java.util.List;
 @CrossOrigin("*")
 @RequestMapping(value = "/ambulance")
 public class AmbulanceController {
+    @Autowired
     private final AmbulanceService ambulanceService;
 
     public AmbulanceController(AmbulanceService ambulanceService) {
         this.ambulanceService = ambulanceService;
     }
 
-    @PostMapping("/listall")
+    @PostMapping("/listAllAmbulances")
     public @ResponseBody
-    List<Ambulance> listAll(@RequestParam("roleType") RoleType roleType,HttpServletRequest request) throws MessException
+    List<Ambulance> listAll(HttpServletRequest request) throws MessException
     {
-        if(roleType.toString() != "STUDENT")
-        {
+//        if(roleType.toString() != "STUDENT")
+//        {
             return ambulanceService.getAll();
-        }
-        throw new MessException("Invalid User");
+//        }
+//        throw new MessException("Invalid User");
     }
     @PostMapping("/getAllRequestsByUser")
     public @ResponseBody
@@ -61,5 +63,18 @@ public class AmbulanceController {
         }
         throw new MessException("Invalid User");
 
+    }
+
+    @PostMapping("/delete")
+    public @ResponseBody
+    String deleteAmbulance(@RequestParam("ambulanceId")Integer ambulanceId,
+                         @RequestParam("userId") String userId,
+                         @RequestParam("roleType") RoleType roleType,
+                         HttpServletRequest request) throws MessException
+    {
+//        String userId = (String) request.getSession().getAttribute("USERID");
+//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+        ambulanceService.delete(Integer.parseInt(userId), roleType, ambulanceId);
+        return "Success";
     }
 }

@@ -2,6 +2,7 @@ package com.gramtarang.mess.controller;
 
 import com.gramtarang.mess.common.MessException;
 import com.gramtarang.mess.entity.Feedback;
+import com.gramtarang.mess.entity.Internship;
 import com.gramtarang.mess.entity.MessUser;
 import com.gramtarang.mess.enums.RoleType;
 import com.gramtarang.mess.service.FeedbackService;
@@ -42,7 +43,7 @@ public class FeedbackController {
         return replyData;
     }
 
-    @PostMapping("/listOfFeedbacks")
+    @PostMapping("/listOfFeedbacksByMess")
     public @ResponseBody
     List<Feedback> listOfFeedbacks(@RequestParam("messId")int messId,
                                    @RequestParam("userId") String userId,
@@ -51,6 +52,13 @@ public class FeedbackController {
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         List<Feedback> feedbackList = feedbackService.listOfFeedbacks(Integer.parseInt(userId), roleType, messId);
+        return feedbackList;
+    }
+
+    @PostMapping("/listOfFeedbacks")
+    public @ResponseBody
+    List<Feedback> listOfFeedbacks(HttpServletRequest request) throws MessException {
+        List<Feedback> feedbackList = feedbackService.listOfFeedbacks();
         return feedbackList;
     }
 }

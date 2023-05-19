@@ -11,9 +11,12 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 public class UserService {
+
+    private static final Logger logger = Logger.getLogger(String.valueOf(UserService.class));
 
     private UserRepository userRepository;
 
@@ -27,6 +30,7 @@ public class UserService {
 
       public User authenticateLogin(String email, String password) throws MessException {
           User user = this.userRepository.findUserByEmailAddressAndPassword(email, password);
+          logger.info("User Data:" + user);
           if (user != null) {
              return user;
           }

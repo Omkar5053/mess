@@ -15,9 +15,11 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 public class InternshipService {
+    public static final Logger logger = Logger.getLogger(String.valueOf(InternshipService.class));
     @Autowired
     public final UserRepository userRepository;
     @Autowired
@@ -34,7 +36,7 @@ public class InternshipService {
     }
 
     public Internship addOrEditInternship(int userId, RoleType roleType, int internshipId, String registrationNo, String name,
-                                         String phoneNo, String emailId, String campus, String purpose, int noOfDays, int hostelId, int messId) throws MessException {
+                                         String phoneNo, String emailId,  String purpose, int noOfDays, int hostelId, int messId) throws MessException {
         Optional<User> user = userRepository.findById(userId);
         Internship internship = null;
         if ((roleType == RoleType.WARDEN) || (roleType == RoleType.CHIEFWARDEN) || (roleType == RoleType.ADMIN)){
@@ -48,7 +50,7 @@ public class InternshipService {
                 internship.setName(name);
                 internship.setPhoneNo(phoneNo);
                 internship.setEmailId(emailId);
-                internship.setCampus(campus);
+//                internship.setCampus(campus);
                 internship.setPurpose(purpose);
                 internship.setNoOfDays(noOfDays);
                 Optional<Hostel> hostel = hostelRepository.findById(hostelId);
@@ -92,12 +94,21 @@ public class InternshipService {
 
     public List<Internship> listOfInternshipStudentsByHostel(int userId, RoleType roleType, int hostelId) throws MessException {
         List<Internship> internshipList = new ArrayList<>();
+
         if ((roleType != RoleType.STUDENT)) {
             Optional<Hostel> hostel = hostelRepository.findById(hostelId);
+            logger.info("HostelData:" +hostel);
             internshipList = internshipRepository.findByHostel(hostel.get());
         }
         return internshipList;
     }
 
+    public List<Internship> listOfInternshipStudents() {
+        List<Internship> internshipList = internshipRepository.findAll();
+        return internshipList;
+    }
 
+    public List<Internship> listAll() throws MessException{
+        return internshipRepository.findAll();
+    }
 }

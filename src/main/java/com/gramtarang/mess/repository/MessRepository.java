@@ -12,4 +12,6 @@ public interface MessRepository extends JpaRepository<Mess, Integer> {
     @Query("from Mess where user = :user")
     Mess findByUser(User user);
 
+    Mess findByMessName(String messName);
+
 }

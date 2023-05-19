@@ -28,7 +28,8 @@ public class HostelController {
 
     @PostMapping("/addHostel")
     public @ResponseBody
-    Hostel addHostel(@RequestBody Hostel hostel,
+    Hostel addHostel(@RequestParam("hostelName")String hostelName,
+                     @RequestParam("hostelId") int hostelId,
                      @RequestParam("userId") String userId,
                      @RequestParam("roleType") RoleType roleType,
                      HttpServletRequest request) throws MessException {
@@ -36,9 +37,21 @@ public class HostelController {
 
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
-        return hostelService.add(Integer.parseInt(userId),roleType, hostel);
+        return hostelService.add(Integer.parseInt(userId),roleType, hostelId, hostelName);
     }
 
+
+    @PostMapping("/updateHostel")
+    public @ResponseBody
+    Hostel updateHostel(@RequestParam("hostel_id") Integer hostel_id,
+                     @RequestParam("hostelName") String hostelName,
+                     @RequestParam("userId") String userId,
+                     @RequestParam("roleType") RoleType roleType,
+                     HttpServletRequest request) throws MessException {
+//        String userId = (String) request.getSession().getAttribute("USERID");
+//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+        return hostelService.update(Integer.parseInt(userId),roleType, hostel_id, hostelName);
+    }
     @PostMapping("/delete")
     public @ResponseBody
     String deleteHostel(@RequestParam(value = "hostel_id") Integer hostel_id,
@@ -50,6 +63,13 @@ public class HostelController {
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         hostelService.delete(Integer.parseInt(userId), roleType, hostel_id);
         return "DELETE SUCCESSFULLY";
+    }
+
+    @PostMapping("/getBy")
+    public @ResponseBody
+    Hostel getHostelById(@RequestParam (value = "hostel_id") Integer hostel_id,
+                         HttpServletRequest request) throws MessException{
+        return hostelService.getHostelById(hostel_id);
     }
 
 }

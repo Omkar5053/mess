@@ -1,6 +1,7 @@
 package com.gramtarang.mess.controller;
 
 import com.gramtarang.mess.common.MessException;
+import com.gramtarang.mess.common.ValueNameDto;
 import com.gramtarang.mess.entity.Ambulance;
 import com.gramtarang.mess.entity.Hostel;
 import com.gramtarang.mess.enums.*;
@@ -38,10 +39,11 @@ public class CommonController {
 
     @RequestMapping(value = "/userType", method = RequestMethod.GET)
     public @ResponseBody
-    List<UserType> getAllUserType() {
-        List<UserType> types = new ArrayList<UserType>();
+    List<ValueNameDto> getAllUserType() {
+        List<ValueNameDto> types = new ArrayList<>();
+        types.add(new ValueNameDto("--Select--", "--Select--"));
         for (UserType t : UserType.values()) {
-            types.add(t);
+            types.add(new ValueNameDto(String.valueOf(t), t.toString()));
         }
         return types;
     }

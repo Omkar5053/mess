@@ -23,7 +23,14 @@ public class MaintenanceController {
         this.maintenanceService = maintenanceService;
     }
 
-    @PostMapping("/listOfMaintenanceDataByMaintenanceType")
+    @PostMapping("/listOfMaintenanceData")
+    public @ResponseBody
+    List<Maintenance> listOfMaintenanceData(HttpServletRequest request) throws MessException
+    {
+        return maintenanceService.getListOfMaintenance();
+    }
+
+    @PostMapping("/listOfMaintenanceDatByMaintenanceType")
     public @ResponseBody
     List<Maintenance> listOfMaintenance(@RequestParam(value = "maintenanceType")MaintenanceType maintenanceType,
                                         HttpServletRequest request) throws MessException

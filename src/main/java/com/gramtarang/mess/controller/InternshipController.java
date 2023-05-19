@@ -24,12 +24,11 @@ public class InternshipController {
     }
 
     @PostMapping("/addOrEditInternship")
-    public Internship addOrEditInternship(@RequestParam("internshipId")int internshipId,
+    public Internship addOrEditInternship(@RequestParam("internshipId") int internshipId,
                                           @RequestParam("registrationNo")String registrationNo,
                                           @RequestParam("name")String name,
                                           @RequestParam("phoneNo")String phoneNo,
                                           @RequestParam("emailId")String emailId,
-                                          @RequestParam("campus")String campus,
                                           @RequestParam("purpose")String purpose,
                                           @RequestParam("noOfDays")int noOfDays,
                                           @RequestParam("hostelId")int hostelId,
@@ -40,7 +39,7 @@ public class InternshipController {
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         Internship internshipData = internshipService.addOrEditInternship(Integer.parseInt(userId), roleType, internshipId, registrationNo, name, phoneNo,
-                emailId, campus, purpose,noOfDays, hostelId, messId);
+                emailId, purpose,noOfDays, hostelId, messId);
         return internshipData;
     }
 
@@ -67,6 +66,23 @@ public class InternshipController {
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         List<Internship> internshipList = internshipService.listOfInternshipStudentsByHostel(Integer.parseInt(userId), roleType, hostel_id);
+
+        return internshipList;
+    }
+
+//    @PostMapping("/listOfInternships")
+//    public @ResponseBody
+//    List<Internship> listOfInternshipStudents(HttpServletRequest request) throws MessException {
+//        List<Internship> internshipList = internshipService.listOfInternshipStudents();
+//        return internshipList;
+//    }
+
+    @PostMapping("/listOfInternships")
+    public @ResponseBody
+    List<Internship> listOfInternships(HttpServletRequest request) throws MessException {
+//        String userId = (String) request.getSession().getAttribute("USERID");
+//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+        List<Internship> internshipList = internshipService.listAll();
 
         return internshipList;
     }

@@ -37,6 +37,10 @@ public class MaintenanceService {
         return maintenanceRepository.findAllByMaintenanceType(maintenanceType);
     }
 
+    public List<Maintenance> getListOfMaintenance() throws MessException {
+        return maintenanceRepository.findAll();
+    }
+
     public Maintenance addOrEdit(int userId, RoleType roleType, Maintenance maintenance) throws MessException{
         Maintenance maintenance1 = null;
         Optional<User> user = userRepository.findById(maintenance.getUser().getUserId());

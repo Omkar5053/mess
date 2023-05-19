@@ -11,7 +11,6 @@ import com.gramtarang.mess.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.management.relation.Role;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,10 +31,18 @@ public class HostelService {
         return hostelRepository.findAll();
     }
 
-    public Hostel add(int userId, RoleType roleType, Hostel hostel) throws MessException {
+    public Hostel add(int userId, RoleType roleType, int hostelId, String hostelName) throws MessException {
         Optional<User> user = userRepository.findById(userId);
         try {
-            hostel = hostelRepository.save(hostel);
+            Hostel hostel = hostelRepository.findByHostelName(hostelName);
+            if (hostel == null) {
+                hostel = new Hostel();
+                hostel.setHostelName(hostelName);
+                hostelRepository.save(hostel);
+                hostelRepository.flush();
+            } else {
+                throw new MessException("Already the " + hostelName + " exists");
+            }
             auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.SUCCESS, "Created HostelData :" + hostel + "RoleType:" + roleType);
             return hostel;
         } catch (Exception ex) {
@@ -53,5 +60,19 @@ public class HostelService {
         } catch (Exception ex) {
             auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.FAIL, "Deleted HostelData :" + hostel + "RoleType:" + roleType + " Exception:" + ex);
         }
+    }
+
+    public Hostel getHostelById(Integer hostel_id) {
+        return hostelRepository.findById(hostel_id).get();
+    }
+
+    public Hostel update(int userId, RoleType roleType, Integer hostel_id, String hostelName) throws MessException{
+        Optional<Hostel> hostel = hostelRepository.findById(hostel_id);
+        Optional<User> user  = userRepository.findById(userId);
+        if(hostel.isPresent()){
+                hostel.get().setHostelName(hostelName);
+                return hostelRepository.save(hostel.get());
+        }
+        return null;
     }
 }
