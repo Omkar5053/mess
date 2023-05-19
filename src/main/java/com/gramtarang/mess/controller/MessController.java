@@ -36,9 +36,10 @@ public class MessController {
                                             @RequestParam("userId") String userId,
                                             @RequestParam("roleType") RoleType roleType,
                                             HttpServletRequest request) throws MessException {
+
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
-        List<MessUser> messUserList = messService.listOfStudentsByUserType(Integer.parseInt(userId), userType, roleType);
+          List<MessUser> messUserList = messService.listOfStudentsByUserType(Integer.parseInt(userId), userType, roleType);
 
         return messUserList;
     }
@@ -49,7 +50,9 @@ public class MessController {
                                             @RequestParam("breakFast")int breakfast,
                                             @RequestParam("userId") String userId,
                                             @RequestParam("roleType") RoleType roleType,
-                            @RequestParam("lunch")int lunch, @RequestParam("dinner")int dinner, HttpServletRequest request) throws MessException {
+                                            @RequestParam("lunch")int lunch,
+                                            @RequestParam("dinner")int dinner, HttpServletRequest request) throws MessException {
+
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         MessUser messUser = messService.addOrEditStudentDataToMessUser(id, Integer.parseInt(userId), roleType, messId, breakfast, lunch, dinner);
@@ -62,10 +65,10 @@ public class MessController {
                                      @RequestParam("userId") String userId,
                                      @RequestParam("roleType") RoleType roleType,
                                      HttpServletRequest request) throws MessException {
+
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         String replyData = messService.deleteStudentMessUserData(Integer.parseInt(userId), roleType, messUserId);
         return replyData;
     }
-
 }
