@@ -21,12 +21,12 @@ public class MessController {
         this.messService = messService;
     }
 
-    @PostMapping("/listOfAllMess")
-    public @ResponseBody
-    List<Mess> listOfAllMessData(HttpServletRequest request) {
-        List<Mess> messList = messService.listOfMessData();
-        return messList;
-    }
+//    @PostMapping("/listOfAllMess")
+//    public @ResponseBody
+//    List<Mess> listOfAllMessData(HttpServletRequest request) {
+//        List<Mess> messList = messService.listOfMessData();
+//        return messList;
+//    }
 
     @PostMapping("/listOfStudentsByUserType")
     public @ResponseBody

@@ -40,10 +40,10 @@ public class MessService {
         this.auditLog = auditLog;
     }
 
-    public List<Mess> listOfMessData() {
-        List<Mess> messList = messRepository.findAll();
-        return messList;
-    }
+//    public List<Mess> listOfMessData() {
+//        List<Mess> messList = messRepository.findAll();
+//        return messList;
+//    }
 
 
     public Mess addOrUpdateMess(int userId, RoleType roleType, int messId, String messName) throws MessException {
@@ -198,14 +198,14 @@ public class MessService {
         return messRepository.findById(messId).get();
     }
 
-    public void delete(int userId, RoleType roleType, Integer messId) throws MessException{
-        Optional<User> user = userRepository.findById(userId);
-        Optional<Mess> mess = messRepository.findById(messId);
-        try {
-            messRepository.deleteById(messId);
-            auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.SUCCESS, "Deleted HostelData :" + mess + "RoleType:" + roleType);
-        } catch (Exception ex) {
-            auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.FAIL, "Deleted HostelData :" + mess + "RoleType:" + roleType + " Exception:" + ex);
-        }
-    }
+//    public void delete(int userId, RoleType roleType, Integer messId) throws MessException{
+//        Optional<User> user = userRepository.findById(userId);
+//        Optional<Mess> mess = messRepository.findById(messId);
+//        try {
+//            messRepository.deleteById(messId);
+//            auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.SUCCESS, "Deleted HostelData :" + mess + "RoleType:" + roleType);
+//        } catch (Exception ex) {
+//            auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.FAIL, "Deleted HostelData :" + mess + "RoleType:" + roleType + " Exception:" + ex);
+//        }
+//    }
 }
