@@ -36,7 +36,7 @@ public class InternshipService {
     }
 
     public Internship addOrEditInternship(int userId, RoleType roleType, int internshipId, String registrationNo, String name,
-                                         String phoneNo, String emailId, String campus, String purpose, int noOfDays, int hostelId, int messId) throws MessException {
+                                         String phoneNo, String emailId,  String purpose, int noOfDays, int hostelId, int messId) throws MessException {
         Optional<User> user = userRepository.findById(userId);
         Internship internship = null;
         if ((roleType == RoleType.WARDEN) || (roleType == RoleType.CHIEFWARDEN) || (roleType == RoleType.ADMIN)){
@@ -50,7 +50,7 @@ public class InternshipService {
                 internship.setName(name);
                 internship.setPhoneNo(phoneNo);
                 internship.setEmailId(emailId);
-                internship.setCampus(campus);
+//                internship.setCampus(campus);
                 internship.setPurpose(purpose);
                 internship.setNoOfDays(noOfDays);
                 Optional<Hostel> hostel = hostelRepository.findById(hostelId);
@@ -108,4 +108,7 @@ public class InternshipService {
         return internshipList;
     }
 
+    public List<Internship> listAll() throws MessException{
+        return internshipRepository.findAll();
+    }
 }

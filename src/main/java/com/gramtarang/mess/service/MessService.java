@@ -165,4 +165,47 @@ public class MessService {
         }
         return "Success";
     }
+
+    public List<Mess> listOfMessData() {
+        List<Mess> messList = messRepository.findAll();
+        return messList;
+    }
+
+    public Mess add(int userId, RoleType roleType, Mess mess) throws MessException{
+        Optional<User> user = userRepository.findById(userId);
+        System.out.println(user.get());
+        try {
+            mess = messRepository.save(mess);
+            auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.SUCCESS, "Created HostelData :" + mess + "RoleType:" + roleType);
+            return mess;
+        } catch (Exception ex) {
+            auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.FAIL, "Created HostelData :" + ex + " roleType " + roleType);
+            throw new MessException(String.valueOf(ex));
+        }
+    }
+
+    public Mess update(int userId, RoleType roleType, Integer messId, String messName) throws MessException{
+        Optional<Mess> mess = messRepository.findById(messId);
+        Optional<User> user  = userRepository.findById(userId);
+        if(mess.isPresent()){
+            mess.get().setMessName(messName);
+            return messRepository.save(mess.get());
+        }
+        return null;
+    }
+
+    public Mess getMessById(Integer messId) {
+        return messRepository.findById(messId).get();
+    }
+
+    public void delete(int userId, RoleType roleType, Integer messId) throws MessException{
+        Optional<User> user = userRepository.findById(userId);
+        Optional<Mess> mess = messRepository.findById(messId);
+        try {
+            messRepository.deleteById(messId);
+            auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.SUCCESS, "Deleted HostelData :" + mess + "RoleType:" + roleType);
+        } catch (Exception ex) {
+            auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.FAIL, "Deleted HostelData :" + mess + "RoleType:" + roleType + " Exception:" + ex);
+        }
+    }
 }

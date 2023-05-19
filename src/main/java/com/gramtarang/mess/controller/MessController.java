@@ -58,6 +58,54 @@ public class MessController {
         return replyData;
     }
 
+    @PostMapping("/listOfAllMess")
+    public @ResponseBody
+    List<Mess> listOfAllMessData(HttpServletRequest request) {
+        List<Mess> messList = messService.listOfMessData();
+        return messList;
+    }
+
+    @PostMapping("/addMess")
+    public @ResponseBody
+    Mess addHostel(@RequestBody Mess mess,
+                     @RequestParam("userId") String userId,
+                     @RequestParam("roleType") RoleType roleType,
+                     HttpServletRequest request) throws MessException {
+//        String userId = (String) request.getSession().getAttribute("USERID");
+//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+        return messService.add(Integer.parseInt(userId),roleType, mess);
+    }
+
+    @PostMapping("/updateMess")
+    public @ResponseBody
+    Mess updateHostel(@RequestParam("messId") Integer messId,
+                        @RequestParam("messName") String messName,
+                        @RequestParam("userId") String userId,
+                        @RequestParam("roleType") RoleType roleType,
+                        HttpServletRequest request) throws MessException {
+//        String userId = (String) request.getSession().getAttribute("USERID");
+//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+        return messService.update(Integer.parseInt(userId),roleType, messId, messName);
+    }
+
+    @PostMapping("/getBy")
+    public @ResponseBody
+    Mess getHostelById(@RequestParam (value = "messId") Integer messId,
+                         HttpServletRequest request) throws MessException{
+        return messService.getMessById(messId);
+    }
+
+    @PostMapping("/delete")
+    public @ResponseBody
+    String deleteMess(@RequestParam(value = "messId") Integer messId,
+                        @RequestParam("userId") String userId,
+                        @RequestParam("roleType") RoleType roleType,
+                        HttpServletRequest request) throws MessException {
+//        String userId = (String) request.getSession().getAttribute("USERID");
+//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+        messService.delete(Integer.parseInt(userId), roleType, messId);
+        return "DELETE SUCCESSFULLY";
+    }
 
     @PostMapping("/addOrUpdateMess")
     public @ResponseBody
