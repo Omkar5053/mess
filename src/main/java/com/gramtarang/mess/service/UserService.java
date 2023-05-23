@@ -29,6 +29,7 @@ public class UserService {
     }
 
       public User authenticateLogin(String email, String password) throws MessException {
+          logger.info("Entered to AUTHELOGIN");
           User user = this.userRepository.findUserByEmailAddressAndPassword(email, password);
           logger.info("User Data:" + user);
           if (user != null) {

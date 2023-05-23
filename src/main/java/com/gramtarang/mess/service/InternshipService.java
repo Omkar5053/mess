@@ -3,6 +3,7 @@ package com.gramtarang.mess.service;
 import com.gramtarang.mess.common.MessException;
 import com.gramtarang.mess.entity.Hostel;
 import com.gramtarang.mess.entity.Internship;
+import com.gramtarang.mess.entity.Mess;
 import com.gramtarang.mess.entity.User;
 import com.gramtarang.mess.entity.auditlog.AuditOperation;
 import com.gramtarang.mess.entity.auditlog.Status;
@@ -26,13 +27,17 @@ public class InternshipService {
     public final InternshipRepository internshipRepository;
     @Autowired
     public final HostelRepository hostelRepository;
+
+    @Autowired
+    public final MessRepository messRepository;
     public final AuditUtil auditLog;
 
-    public InternshipService(UserRepository userRepository, InternshipRepository internshipRepository, HostelRepository hostelRepository, AuditUtil auditLog) {
+    public InternshipService(UserRepository userRepository, InternshipRepository internshipRepository, HostelRepository hostelRepository, AuditUtil auditLog, MessRepository messRepository) {
         this.userRepository = userRepository;
         this.internshipRepository = internshipRepository;
         this.hostelRepository = hostelRepository;
         this.auditLog = auditLog;
+        this.messRepository = messRepository;
     }
 
     public Internship addOrEditInternship(int userId, RoleType roleType, int internshipId, String registrationNo, String name,
@@ -57,12 +62,15 @@ public class InternshipService {
                 if (hostel != null) {
                     internship.setHostel(hostel.get());
                 }
-                internship = internshipRepository.save(internship);
-                internshipRepository.flush();
+                Optional<Mess> mess = messRepository.findById(messId);
+                if (mess != null) {
+                    internship.setMess(mess.get());
+                }
                 if (internshipId == 0)
                     auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.SUCCESS, "Created InternshipData :" + internship + "RoleType:" + roleType);
                 else
                     auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.SUCCESS, "Updated InternshipData :" + internship + "RoleType:" + roleType);
+                return internshipRepository.save(internship);
             } catch (Exception ex) {
                 if(internshipId == 0)
                     auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.FAIL, "Created InternshipData :" + internship + "RoleType:" + roleType);
@@ -110,5 +118,9 @@ public class InternshipService {
 
     public List<Internship> listAll() throws MessException{
         return internshipRepository.findAll();
+    }
+
+    public Internship getById(Integer internshipId) {
+        return internshipRepository.findById(internshipId).get();
     }
 }

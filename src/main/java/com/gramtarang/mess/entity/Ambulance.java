@@ -1,10 +1,12 @@
 package com.gramtarang.mess.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.gramtarang.mess.enums.AmbulanceStatus;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -17,14 +19,21 @@ public class Ambulance {
     private AmbulanceStatus ambulanceStatus;
     private String ambulanceName;
     private String licensePlate;
-    private Date lastMaintenanceDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MMM-yyyy hh:mm:ss")
+    private LocalDateTime lastMaintenanceDate;
     @ManyToOne
 //    @JsonManagedReference
 //    @JsonIgnore
     @JoinColumn(name = "user_id")
     private User user;
 
+    public void setLastMaintenanceDate(LocalDateTime lastMaintenanceDate) {
+        this.lastMaintenanceDate = lastMaintenanceDate;
+    }
 
+    public LocalDateTime getLastMaintenanceDate() {
+        return lastMaintenanceDate;
+    }
 
     public int getAmbulance_id() {
         return ambulance_id;
@@ -40,8 +49,7 @@ public class Ambulance {
     public String getLicensePlate() { return licensePlate; }
     public void setLicensePlate(String licensePlate) { this.licensePlate = licensePlate; }
 
-    public Date getLastMaintenanceDate() { return lastMaintenanceDate; }
-    public void setLastMaintenanceDate(Date lastMaintenanceDate) { this.lastMaintenanceDate = lastMaintenanceDate; }
+
 
     public User getUser() { return user; }
 

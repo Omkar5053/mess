@@ -87,4 +87,11 @@ public class InternshipController {
         return internshipList;
     }
 
+
+    @PostMapping("/getById")
+    public @ResponseBody
+    Internship getInternshipById(@RequestParam(value = "internshipId") Integer internshipId) throws MessException{
+        return internshipService.getById(internshipId);
+    }
+
 }

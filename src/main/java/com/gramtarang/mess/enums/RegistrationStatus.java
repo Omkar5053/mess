@@ -2,8 +2,8 @@ package com.gramtarang.mess.enums;
 
 public enum RegistrationStatus {
 
-    REGISTRED(1),
-    NOTREGISTRED(2);
+    REGISTRED(0),
+    NOTREGISTRED(1);
 
     private int id;
     RegistrationStatus(int id) {

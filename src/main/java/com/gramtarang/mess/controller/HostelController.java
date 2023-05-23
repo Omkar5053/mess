@@ -80,8 +80,8 @@ public class HostelController {
 
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
-        hostelService.delete(Integer.parseInt(userId), roleType, hostel_id);
-        return "DELETE SUCCESSFULLY";
+        String msg = hostelService.delete(Integer.parseInt(userId), roleType, hostel_id);
+        return msg;
     }
 
     @PostMapping("/getBy")

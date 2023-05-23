@@ -1,5 +1,6 @@
 package com.gramtarang.mess.entity;
 
+import com.gramtarang.mess.enums.FoodType;
 import com.gramtarang.mess.enums.RegistrationStatus;
 import jakarta.persistence.*;
 
@@ -9,7 +10,7 @@ public class MessUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int messUserId;
-    private String foodType;
+    private FoodType foodType;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -37,11 +38,13 @@ public class MessUser {
         this.messUserId = messUserId;
     }
 
-    public String getFoodType() {
+    public FoodType getFoodType() {
         return foodType;
     }
 
-    public void setFoodType(String foodType) { this.foodType = foodType; }
+    public void setFoodType(FoodType foodType) {
+        this.foodType = foodType;
+    }
 
     public User getUser() {
         return user;

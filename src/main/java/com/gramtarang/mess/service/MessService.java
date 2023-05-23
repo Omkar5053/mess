@@ -7,6 +7,7 @@ import com.gramtarang.mess.entity.MessUser;
 import com.gramtarang.mess.entity.User;
 import com.gramtarang.mess.entity.auditlog.AuditOperation;
 import com.gramtarang.mess.entity.auditlog.Status;
+import com.gramtarang.mess.enums.FoodType;
 import com.gramtarang.mess.enums.RegistrationStatus;
 import com.gramtarang.mess.enums.RoleType;
 import com.gramtarang.mess.enums.UserType;
@@ -66,7 +67,6 @@ public class MessService {
             mess.setMessName(messName);
             mess.setUser(user.get());
             messRepository.save(mess);
-            messRepository.flush();
             if (status == 1) {
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.SUCCESS, "Created MessData :" + mess + "RoleType:" + roleType);
             } else {
@@ -117,7 +117,7 @@ public class MessService {
         return messUser;
     }
 
-    public MessUser addOrEditStudentDataToMessUser(int messUserId, int userId, RoleType roleType,int messId,int breakfast,int lunch,int dinner) throws MessException {
+    public MessUser addOrEditStudentDataToMessUser(int messUserId, int userId, RoleType roleType, int messId, int breakfast, int lunch, int dinner, FoodType foodType) throws MessException {
         Optional<User> user = userRepository.findById(userId);
         Optional<Mess> mess = messRepository.findById(messId);
         MessUser messUser = null;
@@ -133,9 +133,9 @@ public class MessService {
             messUser.setDinner(RegistrationStatus.valueOf(dinner));
             messUser.setMess(mess.get());
             messUser.setHostel(null);
-            messUser.setFoodType(null);
+            messUser.setFoodType(foodType);
             messUser = messUserRepository.save(messUser);
-            messUserRepository.flush();
+
             if (messId == 0)
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.SUCCESS, "Created MessUserData :" + messUser + "RoleType:" + roleType);
             else
@@ -196,6 +196,10 @@ public class MessService {
 
     public Mess getMessById(Integer messId) {
         return messRepository.findById(messId).get();
+    }
+
+    public List<MessUser> listOfMessUserData() {
+        return messUserRepository.findAll();
     }
 
 //    public void delete(int userId, RoleType roleType, Integer messId) throws MessException{

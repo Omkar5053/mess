@@ -14,7 +14,7 @@ public class Internship {
     private String name;
     private String phoneNo;
     private String emailId;
-    private String campus;
+//    private String campus;
     private String purpose;
 
     private int noOfDays;
@@ -65,13 +65,13 @@ public class Internship {
         this.emailId = emailId;
     }
 
-    public String getCampus() {
-        return campus;
-    }
-
-    public void setCampus(String campus) {
-        this.campus = campus;
-    }
+//    public String getCampus() {
+//        return campus;
+//    }
+//
+//    public void setCampus(String campus) {
+//        this.campus = campus;
+//    }
 
     public String getPurpose() {
         return purpose;

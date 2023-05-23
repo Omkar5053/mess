@@ -51,14 +51,16 @@ public class HostelService {
         }
     }
 
-    public void delete(int userId, RoleType roleType, Integer hostel_id) throws MessException {
+    public String delete(int userId, RoleType roleType, Integer hostel_id) throws MessException {
         Optional<User> user = userRepository.findById(userId);
         Optional<Hostel> hostel = hostelRepository.findById(hostel_id);
         try {
             hostelRepository.deleteById(hostel_id);
             auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.SUCCESS, "Deleted HostelData :" + hostel + "RoleType:" + roleType);
+            return "SUCCESS";
         } catch (Exception ex) {
             auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.FAIL, "Deleted HostelData :" + hostel + "RoleType:" + roleType + " Exception:" + ex);
+            return "FAILURE";
         }
     }
 

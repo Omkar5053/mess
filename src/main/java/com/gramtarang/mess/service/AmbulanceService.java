@@ -11,6 +11,8 @@ import com.gramtarang.mess.repository.AmbulanceRepository;
 import com.gramtarang.mess.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +41,8 @@ public class AmbulanceService {
         Optional<User> user = userRepository.findById(userId);
         try {
             ambulance.setAmbulanceStatus(AmbulanceStatus.SUBMITTED);
+            ambulance.setUser(user.get());
+            ambulance.setLastMaintenanceDate(LocalDateTime.now());
             ambulance = ambulanceRepository.save(ambulance);
             auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.SUCCESS, "Created AmbulanceData :" + ambulance + "RoleType:" + roleType);
             return ambulance;

@@ -50,13 +50,14 @@ public class FeedbackService {
             feedback.setUser(user.get());
             feedback.setFeedback(feedbackData);
             feedback.setMess(mess.get());
-            feedback = feedbackRepository.save(feedback);
-            feedbackRepository.flush();
+
+
             if (feedbackId == 0) {
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.SUCCESS, String.valueOf(user.get()));
             } else {
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.SUCCESS, String.valueOf(user.get()));
             }
+           return feedbackRepository.save(feedback);
         } catch(Exception ex) {
             if (feedbackId == 0)
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.FAIL, String.valueOf(ex));
