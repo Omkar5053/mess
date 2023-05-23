@@ -1,6 +1,7 @@
 package com.gramtarang.mess.enums;
 
 public enum UserType {
+    UNDEFINED(0),
     DAYSCHOLAR(1),
     HOSTELLER(2);
 

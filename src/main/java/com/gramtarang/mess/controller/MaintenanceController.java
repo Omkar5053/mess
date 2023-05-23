@@ -10,6 +10,7 @@ import com.gramtarang.mess.service.MaintenanceService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -30,6 +31,14 @@ public class MaintenanceController {
         return maintenanceService.getListOfMaintenance();
     }
 
+    @PostMapping("/listOfMaintenanceDataById")
+    public @ResponseBody
+    Maintenance listOfMaintenanceDataById(@RequestParam(value = "maintenanceId") int maintenanceId, HttpServletRequest request) throws MessException
+    {
+        return maintenanceService.getListOfMaintenanceByMaintenanceId(maintenanceId);
+    }
+
+
     @PostMapping("/listOfMaintenanceDatByMaintenanceType")
     public @ResponseBody
     List<Maintenance> listOfMaintenance(@RequestParam(value = "maintenanceType")MaintenanceType maintenanceType,
@@ -40,14 +49,32 @@ public class MaintenanceController {
 
     @PostMapping("/addOrEditMaintenanceDetails")
     public @ResponseBody
-    Maintenance addOrUpdate(@RequestBody Maintenance maintenance,
+    Maintenance addOrUpdate(@RequestParam("maintenanceId") int maintenanceId,
+                            @RequestParam("userName")String userName,
+                            @RequestParam("hostelName") int hostelId,
+                            @RequestParam("description") String description,
+                            @RequestParam("maintenanceStatus") String maintenanceStatus,
+                            @RequestParam("maintenanceType") String maintenanceType,
                             @RequestParam("userId") String userId,
                             @RequestParam("roleType") RoleType roleType,
                             HttpServletRequest request) throws MessException
     {
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
-        return maintenanceService.addOrEdit(Integer.parseInt(userId), roleType, maintenance);
+        return maintenanceService.addOrEdit(Integer.parseInt(userId), roleType, maintenanceId,userName, hostelId, description, maintenanceStatus, maintenanceType);
+    }
+
+    @PostMapping("/editMaintenanceDetailsByAdmin")
+    public @ResponseBody
+    Maintenance editMaintenanceDetailsByAdmin(@RequestParam("maintenanceId") int maintenanceId,
+                            @RequestParam("maintenanceStatus") String maintenanceStatus,
+                            @RequestParam("userId") String userId,
+                            @RequestParam("roleType") RoleType roleType,
+                            HttpServletRequest request) throws MessException
+    {
+//        String userId = (String) request.getSession().getAttribute("USERID");
+//        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
+        return maintenanceService.editMaintenanceDetailsByAdmin(maintenanceId, maintenanceStatus,Integer.parseInt(userId), roleType);
     }
 
     @PostMapping("/changeStatus")
@@ -71,5 +98,11 @@ public class MaintenanceController {
                                          HttpServletRequest request) throws MessException{
 //        String userId = (String) request.getSession().getAttribute("USERID");
         return maintenanceService.getAllList(Integer.parseInt(userId));
+    }
+
+    @PostMapping("/deleteMaintenance")
+    public @ResponseBody
+    String deleteMaintenance(@RequestParam("maintenanceId")int maintenanceId, @RequestParam("userId") int userId, @RequestParam("roleType") RoleType roleType) throws MessException {
+        return  maintenanceService.deleteMaintenance(maintenanceId, userId, roleType);
     }
 }

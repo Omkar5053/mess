@@ -5,14 +5,19 @@ import com.gramtarang.mess.entity.Hostel;
 import com.gramtarang.mess.enums.RoleType;
 import com.gramtarang.mess.service.HostelService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import org.aspectj.util.IStructureModel;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Enumeration;
 import java.util.List;
+import java.util.logging.Logger;
 
 @RestController
 @CrossOrigin("*")
 @RequestMapping(value = "/hostel")
 public class HostelController {
+    public static final Logger logger = Logger.getLogger(String.valueOf(AuthController.class));
     private HostelService hostelService;
 
     public HostelController(HostelService hostelService) {
@@ -23,6 +28,20 @@ public class HostelController {
     public @ResponseBody
     List<Hostel> getAllHostels(HttpServletRequest request)
     {
+        String sessionId = request.getSession().getId();
+        logger.info("SessionId:" + sessionId);
+        HttpSession httpSession = request.getSession(true);
+        logger.info("HttpSession:" + httpSession);
+        if (httpSession != null) {
+            logger.info("UserId:" + httpSession.getAttribute("USERID"));
+        }
+//        Object obj = session.getAttribute("USERID");
+//       for (String element: userId) {
+//           logger.info("EmailId:" + element);
+//       }
+//        RoleType roleType = (RoleType) session.getAttribute("ROLE-TYPE");
+//        logger.info("EmailId:" + obj);
+//        logger.info("RoleType:" + roleType);
         return hostelService.getAll();
     }
 

@@ -37,7 +37,8 @@ public class AuthController {
     @PostMapping("/login")
     public @ResponseBody
     UserLoginDto login(@RequestParam("loginId") String email, @RequestParam("password") String password,
-                       HttpSession session, HttpServletResponse response) throws MessException {
+                       HttpServletRequest request, HttpServletResponse response) throws MessException {
+        HttpSession session = request.getSession();
         User user = userService.authenticateLogin(email, password);
         UserLoginDto dto = new UserLoginDto();
         if (user.getRoleType() != null) {
@@ -47,12 +48,12 @@ public class AuthController {
         }
         dto.setUsername(user.getUserName());
         dto.setSessionId(String.valueOf(user.getUserId()));
-        session.setAttribute("UserId", user.getUserId());
-        session.setAttribute("RoleName", user.getRoleType());
-//        request.getSession().setAttribute("USERID", user.getUserId());
-//        request.getSession().setAttribute("ROLE-NAME", user.getRoleType().toString());
-//        logger.info("UserId:" + request.getAttribute("USERID"));
-//        logger.info("ROLE-NAME" + request.getSession().getAttribute("ROLE-NAME"));
+        session.setAttribute("USERID", user.getUserId());
+        session.setAttribute("ROLE-TYPE", user.getRoleType());
+//        session.setAttribute("UserId", user.getUserId());
+//        session.setAttribute("RoleName", user.getRoleType());
+        logger.info("UserId:" + request.getSession().getAttribute("USERID"));
+        logger.info("ROLE-NAME" + request.getSession().getAttribute("ROLE-TYPE"));
         return dto;
     }
 

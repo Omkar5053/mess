@@ -50,10 +50,20 @@ public class CommonController {
 
     @RequestMapping(value = "/maintenanceType", method = RequestMethod.GET)
     public @ResponseBody
-    List<MaintenanceType> getAllMaintenanceType() {
-        List<MaintenanceType> types = new ArrayList<MaintenanceType>();
+    List<ValueNameDto> getAllMaintenanceType() {
+        List<ValueNameDto> types = new ArrayList<>();
         for (MaintenanceType t : MaintenanceType.values()) {
-            types.add(t);
+            types.add(new ValueNameDto(String.valueOf(t), t.toString()));
+        }
+        return types;
+    }
+
+    @RequestMapping(value = "/maintenanceStatus", method = RequestMethod.GET)
+    public @ResponseBody
+    List<ValueNameDto> getAllMaintenanceStatus() {
+        List<ValueNameDto> types = new ArrayList<>();
+        for (MaintenanceStatus t : MaintenanceStatus.values()) {
+            types.add(new ValueNameDto(String.valueOf(t), t.toString()));
         }
         return types;
     }
