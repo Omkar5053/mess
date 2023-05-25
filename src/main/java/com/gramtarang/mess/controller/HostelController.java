@@ -1,6 +1,7 @@
 package com.gramtarang.mess.controller;
 
 import com.gramtarang.mess.common.MessException;
+import com.gramtarang.mess.dto.ResponseEntityDto;
 import com.gramtarang.mess.entity.Hostel;
 import com.gramtarang.mess.enums.RoleType;
 import com.gramtarang.mess.service.HostelService;
@@ -24,25 +25,34 @@ public class HostelController {
         this.hostelService = hostelService;
     }
 
+//    @PostMapping("/getAllHostels")
+//    public @ResponseBody
+//    List<Hostel> getAllHostels(HttpServletRequest request)
+//    {
+//        String sessionId = request.getSession().getId();
+//        logger.info("SessionId:" + sessionId);
+//        HttpSession httpSession = request.getSession(true);
+//        logger.info("HttpSession:" + httpSession);
+//        if (httpSession != null) {
+//            logger.info("UserId:" + httpSession.getAttribute("USERID"));
+//        }
+////        Object obj = session.getAttribute("USERID");
+////       for (String element: userId) {
+////           logger.info("EmailId:" + element);
+////       }
+////        RoleType roleType = (RoleType) session.getAttribute("ROLE-TYPE");
+////        logger.info("EmailId:" + obj);
+////        logger.info("RoleType:" + roleType);
+//        return hostelService.getAll();
+//    }
+
     @PostMapping("/getAllHostels")
     public @ResponseBody
-    List<Hostel> getAllHostels(HttpServletRequest request)
+    ResponseEntityDto<Hostel> getAllHostels(@RequestParam("userId") String userId,
+                                            @RequestParam("roleType") RoleType roleType,
+                                            HttpServletRequest request) throws MessException
     {
-        String sessionId = request.getSession().getId();
-        logger.info("SessionId:" + sessionId);
-        HttpSession httpSession = request.getSession(true);
-        logger.info("HttpSession:" + httpSession);
-        if (httpSession != null) {
-            logger.info("UserId:" + httpSession.getAttribute("USERID"));
-        }
-//        Object obj = session.getAttribute("USERID");
-//       for (String element: userId) {
-//           logger.info("EmailId:" + element);
-//       }
-//        RoleType roleType = (RoleType) session.getAttribute("ROLE-TYPE");
-//        logger.info("EmailId:" + obj);
-//        logger.info("RoleType:" + roleType);
-        return hostelService.getAll();
+        return hostelService.getAll(Integer.parseInt(userId), roleType);
     }
 
     @PostMapping("/addHostel")

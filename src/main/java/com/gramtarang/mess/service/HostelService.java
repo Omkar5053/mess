@@ -1,6 +1,7 @@
 package com.gramtarang.mess.service;
 
 import com.gramtarang.mess.common.MessException;
+import com.gramtarang.mess.dto.ResponseEntityDto;
 import com.gramtarang.mess.entity.Hostel;
 import com.gramtarang.mess.entity.User;
 import com.gramtarang.mess.entity.auditlog.AuditOperation;
@@ -27,8 +28,31 @@ public class HostelService {
         this.userRepository = userRepository;
     }
 
-    public List<Hostel> getAll() {
-        return hostelRepository.findAll();
+//    public List<Hostel> getAll() {
+//        return hostelRepository.findAll();
+//    }
+
+    public ResponseEntityDto<Hostel> getAll(int userId, RoleType roleType)throws MessException {
+        ResponseEntityDto<Hostel> hostels = new ResponseEntityDto<>();
+        try {
+            List<Hostel> data = hostelRepository.findAll();
+            Optional<User> user = userRepository.findById(userId);
+            if(user.isPresent()){
+                if(user.get().getRoleType().toString() == "ADMIN"){
+                    hostels.setListOfData(data);
+                    hostels.setMessage("Successfully listed All Hostels");
+                    hostels.setStatus(true);
+                } else{
+                    hostels.setMessage("Only ADMIN can list");
+                    hostels.setStatus(false);
+                }
+            }
+        } catch (Exception e) {
+            hostels.setMessage("Can't List the Hostels");
+            hostels.setStatus(false);
+            throw new MessException("Can't List the Hostels");
+        }
+        return hostels;
     }
 
     public Hostel add(int userId, RoleType roleType, int hostelId, String hostelName) throws MessException {
