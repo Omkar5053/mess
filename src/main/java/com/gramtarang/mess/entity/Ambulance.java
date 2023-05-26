@@ -15,25 +15,9 @@ public class Ambulance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int ambulance_id;
 
-    @Enumerated(value = EnumType.ORDINAL)
-    private AmbulanceStatus ambulanceStatus;
     private String ambulanceName;
     private String licensePlate;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MMM-yyyy hh:mm:ss")
-    private LocalDateTime lastMaintenanceDate;
-    @ManyToOne
-//    @JsonManagedReference
-//    @JsonIgnore
-    @JoinColumn(name = "user_id")
-    private User user;
 
-    public void setLastMaintenanceDate(LocalDateTime lastMaintenanceDate) {
-        this.lastMaintenanceDate = lastMaintenanceDate;
-    }
-
-    public LocalDateTime getLastMaintenanceDate() {
-        return lastMaintenanceDate;
-    }
 
     public int getAmbulance_id() {
         return ambulance_id;
@@ -50,16 +34,4 @@ public class Ambulance {
     public void setLicensePlate(String licensePlate) { this.licensePlate = licensePlate; }
 
 
-
-    public User getUser() { return user; }
-
-    public void setUser(User user) { this.user = user; }
-
-    public AmbulanceStatus getAmbulanceStatus() {
-        return ambulanceStatus;
-    }
-
-    public void setAmbulanceStatus(AmbulanceStatus ambulanceStatus) {
-        this.ambulanceStatus = ambulanceStatus;
-    }
 }

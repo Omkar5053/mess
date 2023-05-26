@@ -37,8 +37,7 @@ public class AuthController {
     @PostMapping("/login")
     public @ResponseBody
     UserLoginDto login(@RequestParam("loginId") String email, @RequestParam("password") String password,
-                       HttpServletRequest request, HttpServletResponse response) throws MessException {
-        HttpSession session = request.getSession();
+                       HttpServletRequest request, HttpSession session) throws MessException {
         User user = userService.authenticateLogin(email, password);
         UserLoginDto dto = new UserLoginDto();
         if (user.getRoleType() != null) {
@@ -50,8 +49,6 @@ public class AuthController {
         dto.setSessionId(String.valueOf(user.getUserId()));
         session.setAttribute("USERID", user.getUserId());
         session.setAttribute("ROLE-TYPE", user.getRoleType());
-//        session.setAttribute("UserId", user.getUserId());
-//        session.setAttribute("RoleName", user.getRoleType());
         logger.info("UserId:" + request.getSession().getAttribute("USERID"));
         logger.info("ROLE-NAME" + request.getSession().getAttribute("ROLE-TYPE"));
         return dto;

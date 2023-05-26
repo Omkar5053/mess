@@ -3,9 +3,12 @@ package com.gramtarang.mess.service;
 import com.gramtarang.mess.common.MessException;
 import com.gramtarang.mess.dto.ResponseEntityDto;
 import com.gramtarang.mess.entity.Hostel;
+import com.gramtarang.mess.entity.Mess;
+import com.gramtarang.mess.entity.MessUser;
 import com.gramtarang.mess.entity.User;
 import com.gramtarang.mess.entity.auditlog.AuditOperation;
 import com.gramtarang.mess.entity.auditlog.Status;
+import com.gramtarang.mess.enums.RegistrationStatus;
 import com.gramtarang.mess.enums.RoleType;
 import com.gramtarang.mess.repository.HostelRepository;
 import com.gramtarang.mess.repository.UserRepository;
@@ -28,11 +31,7 @@ public class HostelService {
         this.userRepository = userRepository;
     }
 
-//    public List<Hostel> getAll() {
-//        return hostelRepository.findAll();
-//    }
-
-    public ResponseEntityDto<Hostel> getAll(int userId, RoleType roleType)throws MessException {
+    public ResponseEntityDto<Hostel> getAll(int userId)throws MessException {
         ResponseEntityDto<Hostel> hostels = new ResponseEntityDto<>();
         try {
             List<Hostel> data = hostelRepository.findAll();
@@ -55,50 +54,58 @@ public class HostelService {
         return hostels;
     }
 
-    public Hostel add(int userId, RoleType roleType, int hostelId, String hostelName) throws MessException {
+    public ResponseEntityDto<Hostel> addOrUpdate(int userId, Integer hostel_id, String hostelName) throws MessException{
+        ResponseEntityDto<Hostel> hostels = new ResponseEntityDto<>();
         Optional<User> user = userRepository.findById(userId);
+        Hostel hostel = null;
         try {
-            Hostel hostel = hostelRepository.findByHostelName(hostelName);
-            if (hostel == null) {
+            if (hostel_id == 0) {
                 hostel = new Hostel();
-                hostel.setHostelName(hostelName);
-                hostelRepository.save(hostel);
-                hostelRepository.flush();
+                hostels.setMessage("Hostel Added Successfully");
             } else {
-                throw new MessException("Already the " + hostelName + " exists");
+                hostel = hostelRepository.findById(hostel_id).get();
+                hostels.setMessage("Hostel Updated Successfully");
             }
-            auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.SUCCESS, "Created HostelData :" + hostel + "RoleType:" + roleType);
-            return hostel;
+            hostel.setHostelName(hostelName);
+            hostel = hostelRepository.save(hostel);
+            hostels.setStatus(true);
+            hostels.setData(hostel);
+            if (hostel_id == 0)
+                auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.SUCCESS, "Created MessUserData :" + hostel + "RoleType:" + user.get().getRoleType());
+            else
+                auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.SUCCESS, "Updated MessUserData :" + hostel + "RoleType:" + user.get().getRoleType());
         } catch (Exception ex) {
-            auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.FAIL, "Created HostelData :" + ex + " roleType " + roleType);
-            throw new MessException(String.valueOf(ex));
+            hostels.setMessage("Hostel Already Exists!!");
+            hostels.setStatus(false);
+            if (hostel_id == 0)
+                auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.FAIL, "Created MessUserData :" + hostel + "RoleType:" + user.get().getRoleType() + " Exception:" + ex);
+            else
+                auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.FAIL, "Updated MessUserData :" + hostel + "RoleType:" + user.get().getRoleType() + " Exception:" + ex);
         }
+        return hostels;
     }
 
-    public String delete(int userId, RoleType roleType, Integer hostel_id) throws MessException {
+    public ResponseEntityDto<Hostel> delete(int userId, Integer hostel_id) throws MessException {
+        ResponseEntityDto<Hostel> hostels = new ResponseEntityDto<>();
         Optional<User> user = userRepository.findById(userId);
         Optional<Hostel> hostel = hostelRepository.findById(hostel_id);
         try {
             hostelRepository.deleteById(hostel_id);
-            auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.SUCCESS, "Deleted HostelData :" + hostel + "RoleType:" + roleType);
-            return "SUCCESS";
+            auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.SUCCESS, "Deleted HostelData :" + hostel + "RoleType:" + user.get().getRoleType());
+            hostels.setMessage("Hostel Deleted Successfully!!");
+            hostels.setStatus(true);
         } catch (Exception ex) {
-            auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.FAIL, "Deleted HostelData :" + hostel + "RoleType:" + roleType + " Exception:" + ex);
-            return "FAILURE";
+            auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.FAIL, "Deleted HostelData :" + hostel + "RoleType:" + user.get().getRoleType() + " Exception:" + ex);
+            hostels.setMessage("You Can't delete this Hostel!!");
+            hostels.setStatus(false);
         }
+        return hostels;
     }
 
     public Hostel getHostelById(Integer hostel_id) {
         return hostelRepository.findById(hostel_id).get();
     }
 
-    public Hostel update(int userId, RoleType roleType, Integer hostel_id, String hostelName) throws MessException{
-        Optional<Hostel> hostel = hostelRepository.findById(hostel_id);
-        Optional<User> user  = userRepository.findById(userId);
-        if(hostel.isPresent()){
-                hostel.get().setHostelName(hostelName);
-                return hostelRepository.save(hostel.get());
-        }
-        return null;
-    }
+
+
 }
