@@ -34,14 +34,14 @@ public class HostelController {
         return hostelService.getAll(Integer.parseInt(userId));
     }
 
-//    @PostMapping("/addOrUpdateHostel")
-//    public @ResponseBody
-//    ResponseEntityDto<Hostel> AddOrUpdateHostel(@RequestParam("hostel_id") Integer hostel_id,
-//                        @RequestParam("hostelName") String hostelName,
-//                        @RequestParam("userId") String userId,
-//                        HttpServletRequest request) throws MessException {
-//        return hostelService.addOrUpdate(Integer.parseInt(userId), hostel_id, hostelName);
-//    }
+    @PostMapping("/addOrUpdateHostel")
+    public @ResponseBody
+    ResponseEntityDto<Hostel> AddOrUpdateHostel(@RequestParam("hostel_id") Integer hostel_id,
+                        @RequestParam("hostelName") String hostelName,
+                        @RequestParam("userId") String userId,
+                        HttpServletRequest request) throws MessException {
+        return hostelService.addOrUpdate(Integer.parseInt(userId), hostel_id, hostelName);
+    }
 
     @PostMapping("/delete")
     public @ResponseBody

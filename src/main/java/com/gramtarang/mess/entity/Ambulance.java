@@ -14,7 +14,6 @@ public class Ambulance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int ambulance_id;
-
     private String ambulanceName;
     private String licensePlate;
 

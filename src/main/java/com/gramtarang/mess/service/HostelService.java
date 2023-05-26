@@ -71,16 +71,16 @@ public class HostelService {
             hostels.setStatus(true);
             hostels.setData(hostel);
             if (hostel_id == 0)
-                auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.SUCCESS, "Created MessUserData :" + hostel + "RoleType:" + user.get().getRoleType());
+                auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.SUCCESS, "Created HotelData :" + hostel + "RoleType:" + user.get().getRoleType());
             else
-                auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.SUCCESS, "Updated MessUserData :" + hostel + "RoleType:" + user.get().getRoleType());
+                auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.SUCCESS, "Updated HotelData :" + hostel + "RoleType:" + user.get().getRoleType());
         } catch (Exception ex) {
             hostels.setMessage("Hostel Already Exists!!");
             hostels.setStatus(false);
             if (hostel_id == 0)
-                auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.FAIL, "Created MessUserData :" + hostel + "RoleType:" + user.get().getRoleType() + " Exception:" + ex);
+                auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.FAIL, "Created HotelData :" + hostel + "RoleType:" + user.get().getRoleType() + " Exception:" + ex);
             else
-                auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.FAIL, "Updated MessUserData :" + hostel + "RoleType:" + user.get().getRoleType() + " Exception:" + ex);
+                auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.FAIL, "Updated HotelData :" + hostel + "RoleType:" + user.get().getRoleType() + " Exception:" + ex);
         }
         return hostels;
     }
