@@ -7,9 +7,7 @@ import com.gramtarang.mess.entity.User;
 import com.gramtarang.mess.enums.RoleType;
 import com.gramtarang.mess.repository.UserRepository;
 import com.gramtarang.mess.service.UserService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,7 +61,7 @@ public class AuthController {
         return new UserLoginDto();
     }
 
-    @PostMapping("/getStudents")
+    @PostMapping("/getStudentsByHostel")
     public @ResponseBody
     List<UserDto> studentsByHostel(@RequestParam(value = "hostel_id") Integer hostel_id,
                                    @RequestParam(value = "roleType") RoleType roleType,
@@ -75,6 +73,20 @@ public class AuthController {
         }
         return null;
     }
+
+    @PostMapping("/getStudents")
+    public @ResponseBody
+    List<User> students(
+                                   @RequestParam(value = "userId") String userId,
+                                   HttpServletRequest request) throws MessException
+    {
+
+            return userService.getStudents(Integer.parseInt(userId));
+
+    }
+
+
+
     @PostMapping("/add")
     public @ResponseBody
     User addUser(@RequestBody User user,

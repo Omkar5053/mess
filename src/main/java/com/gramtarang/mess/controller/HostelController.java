@@ -37,10 +37,13 @@ public class HostelController {
     @PostMapping("/addOrUpdateHostel")
     public @ResponseBody
     ResponseEntityDto<Hostel> AddOrUpdateHostel(@RequestParam("hostel_id") Integer hostel_id,
-                        @RequestParam("hostelName") String hostelName,
-                        @RequestParam("userId") String userId,
+                                                @RequestParam("hostelName") String hostelName,
+                                                @RequestParam("noOfFloors") int noOfFloors,
+                                                @RequestParam("noOfRoomPerFloor") int noOfRoomPerFloor,
+                                                @RequestParam("noOfStudentPerRoom") int noOfStudentPerRoom,
+                                                @RequestParam("userId") String userId,
                         HttpServletRequest request) throws MessException {
-        return hostelService.addOrUpdate(Integer.parseInt(userId), hostel_id, hostelName);
+        return hostelService.addOrUpdate(Integer.parseInt(userId), hostel_id, hostelName, noOfFloors, noOfRoomPerFloor, noOfStudentPerRoom);
     }
 
     @PostMapping("/delete")

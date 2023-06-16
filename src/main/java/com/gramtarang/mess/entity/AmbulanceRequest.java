@@ -17,10 +17,7 @@ public class AmbulanceRequest {
     @JoinColumn(name = "hostel_id")
     private Hostel hostel;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
+    private String user;
     @ManyToOne
     @JoinColumn(name = "ambulance_id")
     private Ambulance ambulance;
@@ -48,11 +45,11 @@ public class AmbulanceRequest {
         this.hostel = hostel;
     }
 
-    public User getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(String user) {
         this.user = user;
     }
 

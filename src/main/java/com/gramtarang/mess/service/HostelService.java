@@ -54,7 +54,7 @@ public class HostelService {
         return hostels;
     }
 
-    public ResponseEntityDto<Hostel> addOrUpdate(int userId, Integer hostel_id, String hostelName) throws MessException{
+    public ResponseEntityDto<Hostel> addOrUpdate(int userId, Integer hostel_id, String hostelName, int noOfFloors, int noOfRoomPerFloor, int noOfStudentPerRoom) throws MessException{
         ResponseEntityDto<Hostel> hostels = new ResponseEntityDto<>();
         Optional<User> user = userRepository.findById(userId);
         Hostel hostel = null;
@@ -67,6 +67,9 @@ public class HostelService {
                 hostels.setMessage("Hostel Updated Successfully");
             }
             hostel.setHostelName(hostelName);
+            hostel.setNoOfFloors(noOfFloors);
+            hostel.setNoOfRoomPerFloor(noOfRoomPerFloor);
+            hostel.setNoOfStudentPerRoom(noOfStudentPerRoom);
             hostel = hostelRepository.save(hostel);
             hostels.setStatus(true);
             hostels.setData(hostel);

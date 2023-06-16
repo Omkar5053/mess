@@ -30,11 +30,11 @@ public class AmbulanceController {
     {
             return ambulanceService.getAll(Integer.parseInt(userId));
     }
-    @PostMapping("/getAllRequestsByUser")
+    @PostMapping("/getAllRequests")
     public @ResponseBody
-    ResponseEntityDto<Ambulance> getAmbulanceListByUser(@RequestParam(value = "userId") String userId, HttpServletRequest request) throws MessException
+    ResponseEntityDto<AmbulanceRequest> getAmbulanceRequests(@RequestParam(value = "userId") String userId, HttpServletRequest request) throws MessException
     {
-        return ambulanceService.getListByUser(Integer.parseInt(userId));
+        return ambulanceService.getAllRequests(Integer.parseInt(userId));
     }
 
     @PostMapping("/addOrEditAmbulance")
@@ -61,11 +61,14 @@ public class AmbulanceController {
     @PostMapping("/addAmbulanceRequest")
     public @ResponseBody
     ResponseEntityDto<AmbulanceRequest> addAmbulanceRequest(
-            @RequestBody AmbulanceRequest ambulanceRequest,
+            @RequestParam("hostel_id") int hostel_id,
+            @RequestParam("ambulance_id") int ambulance_id,
             @RequestParam("userId") String userId,
             HttpServletRequest request) throws MessException
     {
-        return ambulanceService.addRequest(ambulanceRequest, Integer.parseInt(userId));
+        return ambulanceService.addRequest(hostel_id, ambulance_id, Integer.parseInt(userId));
     }
+
+
 
 }

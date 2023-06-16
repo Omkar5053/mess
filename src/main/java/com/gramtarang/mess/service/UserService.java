@@ -5,6 +5,8 @@ import com.gramtarang.mess.common.UserDto;
 import com.gramtarang.mess.entity.User;
 import com.gramtarang.mess.entity.auditlog.AuditOperation;
 import com.gramtarang.mess.entity.auditlog.Status;
+import com.gramtarang.mess.enums.RoleType;
+import com.gramtarang.mess.enums.UserType;
 import com.gramtarang.mess.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -53,11 +55,13 @@ public class UserService {
     }
     private UserDto convertToUserDto(User user) {
         UserDto userDto = new UserDto();
-        userDto.setUserStatus(user.getIsActive().toString());
-        userDto.setEmail(user.getEmail());
-        userDto.setRole(user.getRoleType().toString());
-        userDto.setFullName(user.getFirstName()+" "+user.getLastName());
-        userDto.setHostel(user.getHostel().getHostelName());
+        if(user.getUserType() == UserType.HOSTELLER){
+            userDto.setUserStatus(user.getIsActive().toString());
+            userDto.setEmail(user.getEmail());
+            userDto.setRole(user.getRoleType().toString());
+            userDto.setFullName(user.getFirstName()+" "+user.getLastName());
+            userDto.setHostel(user.getHostel().getHostelName());
+        }
         return userDto;
     }
 
@@ -109,4 +113,34 @@ public class UserService {
         auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.FAIL, String.valueOf("User doesn't exist"));
         return "User Doesn't Exists";
     }
+
+    public List<User> getStudents(int userId) {
+        List<User> users = userRepository.findAll();
+        List<User> userList = new ArrayList<>();
+        for(User user : users)
+        {
+            if(user.getUserType() == UserType.HOSTELLER && user.getHostel() == null) {
+                userList.add(user);
+            }
+        }
+        return userList;
+    }
+
+//    private User listOfStudents(User user) {
+//        User user1 = new User();
+//        if(user.getUserType() == UserType.HOSTELLER && user.getHostel() == null){
+//            user1.setEmail(user.getEmail());
+//            user1.setUserId(user.getUserId());
+//            user1.setUserName(user.getUserName());
+//            user1.setFirstName(user.getFirstName());
+//            user1.setLastName(user.getLastName());
+//            user1.setRoleType(user.getRoleType());
+//            user1.setIsActive(user.getIsActive());
+//            user1.setUserType(user.getUserType());
+//            return user1;
+//        }
+//        return null;
+//    }
+
+
 }

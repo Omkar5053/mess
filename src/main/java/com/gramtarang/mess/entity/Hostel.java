@@ -12,6 +12,13 @@ public class Hostel {
     private int hostel_id;
     private String hostelName;
 
+    private int noOfFloors;
+
+    private int noOfRoomPerFloor;
+
+    private int noOfStudentPerRoom;
+
+
 
     public int getHostel_id() {
         return hostel_id;
@@ -24,4 +31,28 @@ public class Hostel {
     public String getHostelName() { return hostelName; }
 
     public void setHostelName(String hostelName) { this.hostelName = hostelName; }
+
+    public int getNoOfFloors() {
+        return noOfFloors;
+    }
+
+    public void setNoOfFloors(int noOfFloors) {
+        this.noOfFloors = noOfFloors;
+    }
+
+    public int getNoOfRoomPerFloor() {
+        return noOfRoomPerFloor;
+    }
+
+    public void setNoOfRoomPerFloor(int noOfRoomPerFloor) {
+        this.noOfRoomPerFloor = noOfRoomPerFloor;
+    }
+
+    public int getNoOfStudentPerRoom() {
+        return noOfStudentPerRoom;
+    }
+
+    public void setNoOfStudentPerRoom(int noOfStudentPerRoom) {
+        this.noOfStudentPerRoom = noOfStudentPerRoom;
+    }
 }
