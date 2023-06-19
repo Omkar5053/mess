@@ -38,27 +38,33 @@ public class StudentDataService {
         Optional<User> user = userRepository.findById(userId);
         StudentData student = null;
         try {
+            List<StudentData> studentDataRoomWise = studentDataRepository.findAllStudentsByHostelAndFloorAndRoom(hostel_id, floorNo, roomNo);
             Hostel hostel = hostelRepository.findById(hostel_id).get();
-            if (id == 0) {
-                student = new StudentData();
-                studentData.setMessage("Data Added Successfully");
-            } else {
-                student = studentDataRepository.findById(id).get();
-                studentData.setMessage("Data Updated Successfully");
+            if(studentDataRoomWise.size() < hostel.getNoOfStudentPerRoom())
+            {
+                if (id == 0) {
+                    student = new StudentData();
+                    studentData.setMessage("Data Added Successfully");
+                } else {
+                    student = studentDataRepository.findById(id).get();
+                    studentData.setMessage("Data Updated Successfully");
+                }
+                user.get().setHostel(hostel);
+                userRepository.save(user.get());
+                student.setHostel(hostel);
+                student.setUser(user.get());
+                student.setFloorNo(floorNo);
+                student.setRoomNo(roomNo);
+                student = studentDataRepository.save(student);
+                studentData.setStatus(true);
+                studentData.setData(student);
+                if (id == 0)
+                    auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.SUCCESS, "Created StudentData :" + student + "RoleType:" + user.get().getRoleType());
+                else
+                    auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.SUCCESS, "Updated StudentData :" + student + "RoleType:" + user.get().getRoleType());
+            } else{
+                throw new MessException("Room is already Occupied");
             }
-            user.get().setHostel(hostel);
-            userRepository.save(user.get());
-            student.setHostel(hostel);
-            student.setUser(user.get());
-            student.setFloorNo(floorNo);
-            student.setRoomNo(roomNo);
-            student = studentDataRepository.save(student);
-            studentData.setStatus(true);
-            studentData.setData(student);
-            if (id == 0)
-                auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.SUCCESS, "Created StudentData :" + student + "RoleType:" + user.get().getRoleType());
-            else
-                auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.SUCCESS, "Updated StudentData :" + student + "RoleType:" + user.get().getRoleType());
         } catch (Exception ex) {
             studentData.setMessage("User added Already!!");
             studentData.setStatus(false);

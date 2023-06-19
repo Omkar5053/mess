@@ -1,7 +1,10 @@
 package com.gramtarang.mess.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.gramtarang.mess.enums.AttendanceStatus;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -10,17 +13,15 @@ public class HostelAttendance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int hostel_attendance_id;
-    private Date date;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MMM-yyyy hh:mm:ss")
+    private LocalDateTime date;
 
-    private Date timeIn;
-
-    private Date timeOut;
+    @Enumerated(value = EnumType.ORDINAL)
+    private AttendanceStatus attendanceStatus;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToOne
-    @JoinColumn(name = "hostel_id")
-    private Hostel hostel;
+
 
     public int getHostel_attendance_id() {
         return hostel_attendance_id;
@@ -30,22 +31,27 @@ public class HostelAttendance {
         this.hostel_attendance_id = hostel_attendance_id;
     }
 
-    public Date getDate() { return date; }
+    public LocalDateTime getDate() {
+        return date;
+    }
 
-    public void setDate(Date date) { this.date = date; }
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
 
-    public Date getTimeIn() { return timeIn; }
+    public AttendanceStatus getAttendanceStatus() {
+        return attendanceStatus;
+    }
 
-    public void setTimeIn(Date timeIn) { this.timeIn = timeIn; }
+    public void setAttendanceStatus(AttendanceStatus attendanceStatus) {
+        this.attendanceStatus = attendanceStatus;
+    }
 
-    public Date getTimeOut() { return timeOut; }
-    public void setTimeOut(Date timeOut) { this.timeOut = timeOut; }
+    public User getUser() {
+        return user;
+    }
 
-    public User getUser() { return user; }
-
-    public void setUser(User user) { this.user = user; }
-
-    public Hostel getHostel() { return hostel; }
-
-    public void setHostel(Hostel hostel) { this.hostel = hostel; }
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

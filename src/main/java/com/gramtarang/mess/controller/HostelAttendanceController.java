@@ -1,5 +1,7 @@
 package com.gramtarang.mess.controller;
 
+import com.gramtarang.mess.common.MessException;
+import com.gramtarang.mess.dto.ResponseEntityDto;
 import com.gramtarang.mess.entity.HostelAttendance;
 import com.gramtarang.mess.enums.RoleType;
 import com.gramtarang.mess.service.HostelAttendanceService;
@@ -18,17 +20,20 @@ public class HostelAttendanceController {
         this.hostelAttendanceService = hostelAttendanceService;
     }
 
-    @PostMapping("/getAttendance")
+    @PostMapping("/addAttendance")
     public @ResponseBody
-    List<HostelAttendance> getStudentAttendances(@RequestParam(value = "user_id") Integer user_id,
-                                                 @RequestParam("roleType") RoleType roleType,
-                                                 HttpServletRequest request)
+    ResponseEntityDto<HostelAttendance> addStudentAttendances(
+            @RequestParam("hostel_id") int hostel_id,
+            @RequestParam("floorNo") int floorNo,
+            @RequestParam("studentAttendances") String userIds,
+                                            HttpServletRequest request) throws MessException
     {
-        if(roleType.toString() != "STUDENT")
-        {
-            return hostelAttendanceService.getStudentAttendances(user_id);
-        }
-        return null;
-
+            String[] ids = userIds.split(",");
+            int[] arr = new int[ids.length];
+            for (int i = 0; i < ids.length; i++) {
+                arr[i] = Integer.valueOf(ids[i]);
+                System.out.println(arr[i]);
+            }
+            return hostelAttendanceService.add(hostel_id, floorNo, arr);
     }
 }
