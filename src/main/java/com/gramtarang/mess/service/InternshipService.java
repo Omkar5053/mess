@@ -1,6 +1,7 @@
 package com.gramtarang.mess.service;
 
 import com.gramtarang.mess.common.MessException;
+import com.gramtarang.mess.dto.ResponseEntityDto;
 import com.gramtarang.mess.entity.Hostel;
 import com.gramtarang.mess.entity.Internship;
 import com.gramtarang.mess.entity.Mess;
@@ -40,9 +41,10 @@ public class InternshipService {
         this.messRepository = messRepository;
     }
 
-    public Internship addOrEditInternship(int userId, RoleType roleType, int internshipId, String registrationNo, String name,
-                                         String phoneNo, String emailId,  String purpose, int noOfDays, int hostelId, int messId) throws MessException {
+    public ResponseEntityDto<Internship> addOrEditInternship(int userId, RoleType roleType, int internshipId, String registrationNo, String name,
+                                                             String phoneNo, String emailId, String purpose, int noOfDays, int hostelId, int messId) throws MessException {
         Optional<User> user = userRepository.findById(userId);
+        ResponseEntityDto<Internship> internshipData = new ResponseEntityDto<>();
         Internship internship = null;
         if ((roleType == RoleType.WARDEN) || (roleType == RoleType.CHIEFWARDEN) || (roleType == RoleType.ADMIN)){
             try {
@@ -70,37 +72,48 @@ public class InternshipService {
                     auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.SUCCESS, "Created InternshipData :" + internship + "RoleType:" + roleType);
                 else
                     auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.SUCCESS, "Updated InternshipData :" + internship + "RoleType:" + roleType);
-                return internshipRepository.save(internship);
+                internship = internshipRepository.save(internship);
+                internshipData.setData(internship);
+                internshipData.setMessage("SuccessFully added the internship data for the student " + registrationNo);
+                internshipData.setStatus(true);
             } catch (Exception ex) {
                 if(internshipId == 0)
                     auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.FAIL, "Created InternshipData :" + internship + "RoleType:" + roleType);
                 else
                     auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.FAIL, "Updated InternshipData :" + internship + "RoleType:" + roleType);
+                internshipData.setStatus(false);
+                internshipData.setMessage("Failed to add student data with " + registrationNo + " " + ex);
             }
         } else {
             throw new MessException("The Data can't be created or edited by roleType: " + roleType);
         }
 
-        return internship;
+        return internshipData;
     }
 
-    public String deleteInternship(int userId, RoleType roleType, int internshipId) throws MessException {
+    public ResponseEntityDto<Internship> deleteInternship(int userId, RoleType roleType, int internshipId) throws MessException {
+        ResponseEntityDto<Internship> deletedInternshipResponseDto = new ResponseEntityDto<>();
         Optional<User> user = userRepository.findById(userId);
         Optional<Internship> internship = internshipRepository.findById(internshipId);
         if ((roleType == RoleType.ADMIN) || (roleType == RoleType.WARDEN)) {
             try {
                 internshipRepository.deleteById(internshipId);
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.SUCCESS, "Deleted InternshipData :" + internship + "RoleType:" + roleType);
+                deletedInternshipResponseDto.setMessage("Internship deleted successfully");
+                deletedInternshipResponseDto.setStatus(true);
             } catch (Exception ex) {
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.FAIL, "Deleted InternshipData :" + internship + "RoleType:" + roleType + " Exception:" + ex);
+                deletedInternshipResponseDto.setMessage("You Can't delete this Internship");
+                deletedInternshipResponseDto.setStatus(false);
             }
         } else {
             throw new MessException(roleType + " can't delete the data");
         }
-        return "Success";
+        return deletedInternshipResponseDto;
     }
 
     public List<Internship> listOfInternshipStudentsByHostel(int userId, RoleType roleType, int hostelId) throws MessException {
+
         List<Internship> internshipList = new ArrayList<>();
 
         if ((roleType != RoleType.STUDENT)) {

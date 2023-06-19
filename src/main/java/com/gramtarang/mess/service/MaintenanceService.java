@@ -1,6 +1,7 @@
 package com.gramtarang.mess.service;
 
 import com.gramtarang.mess.common.MessException;
+import com.gramtarang.mess.dto.ResponseEntityDto;
 import com.gramtarang.mess.entity.Hostel;
 import com.gramtarang.mess.entity.Internship;
 import com.gramtarang.mess.entity.Maintenance;
@@ -54,7 +55,8 @@ public class MaintenanceService {
          }
     }
 
-    public Maintenance addOrEdit(int userId, RoleType roleType, int maintenanceId, String userName, int hostelId, String description, String maintenanceStatus, String maintenanceType) throws MessException{
+    public ResponseEntityDto<Maintenance> addOrEdit(int userId, RoleType roleType, int maintenanceId, String userName, int hostelId, String description, String maintenanceStatus, String maintenanceType) throws MessException{
+        ResponseEntityDto<Maintenance> maintenanceResponseData = new ResponseEntityDto<>();
         Maintenance maintenance1 = null;
         Optional<User> user = userRepository.findById(userId);
         try {
@@ -79,53 +81,73 @@ public class MaintenanceService {
                 }
             }
             maintenance1 = maintenanceRepository.save(maintenance1);
-
+            maintenanceResponseData.setData(maintenance1);
+            maintenanceResponseData.setStatus(true);
+            maintenanceResponseData.setMessage("Successfully added the maintenance data");
             if (maintenanceId == 0)
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.SUCCESS, "Created MaintenanceData :" + maintenance1 + "RoleType:" + roleType);
             else
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.SUCCESS, "Updated MaintenanceData :" + maintenance1 + "RoleType:" + roleType);
         } catch (Exception ex) {
+            maintenanceResponseData.setStatus(false);
+            maintenanceResponseData.setMessage("Failed to add the maintenance data");
             if (maintenanceId == 0)
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.FAIL, "Created MaintenanceData :" + maintenance1 + "RoleType:" + roleType + " Exception:" + ex);
             else
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.FAIL, "Updated MaintenanceData :" + maintenance1 + "RoleType:" + roleType + " Exception:" + ex);
         }
-        return maintenance1;
+        return maintenanceResponseData;
     }
 
-    public Maintenance editMaintenanceDetailsByAdmin(int maintenanceId, String maintenanceStatus, int userId, RoleType roleType) throws MessException {
+    public ResponseEntityDto<Maintenance> editMaintenanceDetailsByAdmin(int maintenanceId, String maintenanceStatus, int userId, RoleType roleType) throws MessException {
+        ResponseEntityDto<Maintenance> maintenanceResponseData = new ResponseEntityDto<>();
         Optional<Maintenance> maintenance = maintenanceRepository.findById(maintenanceId);
         if (maintenance != null) {
             if (roleType == RoleType.ADMIN) {
                 maintenance.get().setMaintenanceStatus(MaintenanceStatus.valueOf(maintenanceStatus));
                 maintenance = Optional.of(maintenanceRepository.save(maintenance.get()));
                 maintenanceRepository.flush();
+                maintenanceResponseData.setStatus(true);
+                maintenanceResponseData.setMessage("Successfully updated the status");
+                maintenanceResponseData.setData(maintenance.get());
             } else {
+                maintenanceResponseData.setMessage("The " + roleType + " can't make modifications");
+                maintenanceResponseData.setStatus(false);
                 throw new MessException("The " + roleType + " can't make modifications");
             }
-            return maintenance.get();
+            return maintenanceResponseData;
         } else {
+            maintenanceResponseData.setStatus(false);
+            maintenanceResponseData.setMessage("Maintenance with " + maintenanceId + " doesn't exists");
             throw new MessException("Maintenance with " + maintenanceId + " doesn't exists");
         }
     }
 
-    public String deleteMaintenance(int maintenanceId, int userId, RoleType roleType) throws MessException {
+    public ResponseEntityDto<Maintenance> deleteMaintenance(int maintenanceId, int userId, RoleType roleType) throws MessException {
         Optional<User> user = userRepository.findById(userId);
+        ResponseEntityDto<Maintenance> maintenanceResponseData = new ResponseEntityDto<>();
         Optional<Maintenance> maintenance = maintenanceRepository.findById(maintenanceId);
         if ((roleType == RoleType.ADMIN)) {
             try {
                 maintenanceRepository.deleteById(maintenanceId);
+                maintenanceResponseData.setStatus(true);
+                maintenanceResponseData.setMessage("Successfully deleted the maintenance data");
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.SUCCESS, "Deleted MaintenanceData :" + maintenance + "RoleType:" + roleType);
             } catch (Exception ex) {
+                maintenanceResponseData.setStatus(false);
+                maintenanceResponseData.setMessage("Failed to delete the maintenance data");
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.FAIL, "Deleted MaintenanceData :" + maintenance + "RoleType:" + roleType + " Exception:" + ex);
             }
         } else {
+            maintenanceResponseData.setStatus(false);
+            maintenanceResponseData.setMessage(roleType + " can't delete the data");
             throw new MessException(roleType + " can't delete the data");
         }
-        return "Success";
+        return maintenanceResponseData;
     }
 
-    public Maintenance changeStatus(MaintenanceStatus maintenanceStatus, Integer userId, Integer maintenanceId) throws MessException{
+    public ResponseEntityDto<Maintenance> changeStatus(MaintenanceStatus maintenanceStatus, Integer userId, Integer maintenanceId) throws MessException{
+        ResponseEntityDto<Maintenance> maintenanceChangeStatusData = new ResponseEntityDto<>();
         Optional<Maintenance> maintenance = maintenanceRepository.findById(maintenanceId);
         if(maintenance.isPresent())
         {
@@ -134,11 +156,18 @@ public class MaintenanceService {
                 if(user != null){
                     maintenance.get().setUser(user.get());
                     maintenance.get().setMaintenanceStatus(MaintenanceStatus.ASSIGNED);
+                    maintenanceChangeStatusData.setStatus(true);
+                    maintenanceChangeStatusData.setMessage("Successfully changed the status " + MaintenanceStatus.ASSIGNED);
                 }
             } else{
                 maintenance.get().setMaintenanceStatus(maintenanceStatus);
+                maintenanceChangeStatusData.setStatus(true);
+                maintenanceChangeStatusData.setMessage("Successfully changed the status to " + maintenanceStatus);
+
             }
-            return maintenanceRepository.save(maintenance.get());
+            maintenanceRepository.save(maintenance.get());
+            maintenanceChangeStatusData.setData(maintenance.get());
+            return maintenanceChangeStatusData;
         }
         throw new MessException("Request is Invalid");
     }

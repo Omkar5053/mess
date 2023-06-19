@@ -1,6 +1,7 @@
 package com.gramtarang.mess.service;
 
 import com.gramtarang.mess.common.MessException;
+import com.gramtarang.mess.dto.ResponseEntityDto;
 import com.gramtarang.mess.entity.Hostel;
 import com.gramtarang.mess.entity.Mess;
 import com.gramtarang.mess.entity.MessUser;
@@ -117,7 +118,8 @@ public class MessService {
         return messUser;
     }
 
-    public MessUser addOrEditStudentDataToMessUser(int messUserId, int userId, RoleType roleType, int messId, int breakfast, int lunch, int dinner, FoodType foodType) throws MessException {
+    public ResponseEntityDto<MessUser> addOrEditStudentDataToMessUser(int messUserId, int userId, RoleType roleType, int messId, int breakfast, int lunch, int dinner, FoodType foodType) throws MessException {
+        ResponseEntityDto<MessUser> messUserResponseData = new ResponseEntityDto<>();
         Optional<User> user = userRepository.findById(userId);
         Optional<Mess> mess = messRepository.findById(messId);
         MessUser messUser = null;
@@ -135,35 +137,46 @@ public class MessService {
             messUser.setHostel(null);
             messUser.setFoodType(foodType);
             messUser = messUserRepository.save(messUser);
-
+            messUserResponseData.setData(messUser);
+            messUserResponseData.setStatus(true);
+            messUserResponseData.setMessage("Successfully saved the MessUser data");
             if (messId == 0)
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.SUCCESS, "Created MessUserData :" + messUser + "RoleType:" + roleType);
             else
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.SUCCESS, "Updated MessUserData :" + messUser + "RoleType:" + roleType);
         } catch (Exception ex) {
+            messUserResponseData.setData(messUser);
+            messUserResponseData.setStatus(false);
+            messUserResponseData.setMessage("Failed saved the MessUser data");
             if (messId == 0)
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.FAIL, "Created MessUserData :" + messUser + "RoleType:" + roleType + " Exception:" + ex);
             else
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.FAIL, "Updated MessUserData :" + messUser + "RoleType:" + roleType + " Exception:" + ex);
         }
-        return messUser;
+        return messUserResponseData;
     }
 
-    public String deleteStudentMessUserData(int userId, RoleType roleType, int messUserId) throws MessException {
+    public ResponseEntityDto<MessUser> deleteStudentMessUserData(int userId, RoleType roleType, int messUserId) throws MessException {
+        ResponseEntityDto<MessUser> messUserResponseData = new ResponseEntityDto<>();
         Optional<User> user = userRepository.findById(userId);
         Optional<MessUser> messUser = messUserRepository.findById(messUserId);
         if ((roleType != RoleType.STUDENT) && (roleType != RoleType.MESSINCHARGE)) {
             try {
                 messUserRepository.deleteById(messUserId);
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.SUCCESS, "Deleted MessUserData :" + messUser + "RoleType:" + roleType);
-
+                messUserResponseData.setStatus(true);
+                messUserResponseData.setMessage("Successfully deleted the MessUser data");
             } catch (Exception ex) {
+                messUserResponseData.setStatus(false);
+                messUserResponseData.setMessage("Failed to delete the MessUser data");
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.FAIL, "Deleted MessUserData :" + messUser + "RoleType:" + roleType + " Exception:" + ex);
             }
         } else {
+            messUserResponseData.setStatus(false);
+            messUserResponseData.setMessage(roleType + " can't delete the data");
             throw new MessException(roleType + " can't delete the data");
         }
-        return "Success";
+        return messUserResponseData;
     }
 
     public List<Mess> listOfMessData() {

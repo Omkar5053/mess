@@ -1,6 +1,7 @@
 package com.gramtarang.mess.controller;
 
 import com.gramtarang.mess.common.MessException;
+import com.gramtarang.mess.dto.ResponseEntityDto;
 import com.gramtarang.mess.entity.Internship;
 import com.gramtarang.mess.entity.LeaveData;
 import com.gramtarang.mess.enums.RoleType;
@@ -24,35 +25,35 @@ public class InternshipController {
     }
 
     @PostMapping("/addOrEditInternship")
-    public Internship addOrEditInternship(@RequestParam("internshipId") int internshipId,
-                                          @RequestParam("registrationNo")String registrationNo,
-                                          @RequestParam("name")String name,
-                                          @RequestParam("phoneNo")String phoneNo,
-                                          @RequestParam("emailId")String emailId,
-                                          @RequestParam("purpose")String purpose,
-                                          @RequestParam("noOfDays")int noOfDays,
-                                          @RequestParam("hostelId")int hostelId,
-                                          @RequestParam("messId")int messId,
-                                          @RequestParam("userId") String userId,
-                                          @RequestParam("roleType") RoleType roleType,
-                                          HttpServletRequest request) throws MessException {
+    public ResponseEntityDto<Internship> addOrEditInternship(@RequestParam("internshipId") int internshipId,
+                                                             @RequestParam("registrationNo")String registrationNo,
+                                                             @RequestParam("name")String name,
+                                                             @RequestParam("phoneNo")String phoneNo,
+                                                             @RequestParam("emailId")String emailId,
+                                                             @RequestParam("purpose")String purpose,
+                                                             @RequestParam("noOfDays")int noOfDays,
+                                                             @RequestParam("hostelId")int hostelId,
+                                                             @RequestParam("messId")int messId,
+                                                             @RequestParam("userId") String userId,
+                                                             @RequestParam("roleType") RoleType roleType,
+                                                             HttpServletRequest request) throws MessException {
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
-        Internship internshipData = internshipService.addOrEditInternship(Integer.parseInt(userId), roleType, internshipId, registrationNo, name, phoneNo,
+        ResponseEntityDto<Internship> internshipData = internshipService.addOrEditInternship(Integer.parseInt(userId), roleType, internshipId, registrationNo, name, phoneNo,
                 emailId, purpose,noOfDays, hostelId, messId);
         return internshipData;
     }
 
     @PostMapping("/deleteInternship")
     public @ResponseBody
-    String deleteInternship(@RequestParam("internshipId") int internshipId,
+    ResponseEntityDto<Internship> deleteInternship(@RequestParam("internshipId") int internshipId,
                             @RequestParam("userId") String userId,
                             @RequestParam("roleType") RoleType roleType,
                             HttpServletRequest request) throws MessException {
 
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
-        String replyData = internshipService.deleteInternship(Integer.parseInt(userId), roleType, internshipId);
+        ResponseEntityDto<Internship> replyData = internshipService.deleteInternship(Integer.parseInt(userId), roleType, internshipId);
         return replyData;
     }
 
@@ -66,7 +67,6 @@ public class InternshipController {
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         List<Internship> internshipList = internshipService.listOfInternshipStudentsByHostel(Integer.parseInt(userId), roleType, hostel_id);
-
         return internshipList;
     }
 

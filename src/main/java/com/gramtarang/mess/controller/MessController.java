@@ -2,6 +2,7 @@ package com.gramtarang.mess.controller;
 
 import com.gramtarang.mess.common.MessException;
 import com.gramtarang.mess.common.UserLoginDto;
+import com.gramtarang.mess.dto.ResponseEntityDto;
 import com.gramtarang.mess.entity.*;
 import com.gramtarang.mess.enums.FoodType;
 import com.gramtarang.mess.enums.RoleType;
@@ -41,28 +42,28 @@ public class MessController {
 
     @PostMapping("/addOrModifyStudentMessUserData")
     public @ResponseBody
-    MessUser addOrEditStudentDataToMessUser(@RequestParam("id")int id, @RequestParam("messId")int messId,
-                                            @RequestParam("breakFast")int breakfast,
-                            @RequestParam("lunch")int lunch, @RequestParam("dinner")int dinner,
-                                            @RequestParam("foodType") FoodType foodType,
-                                            @RequestParam("userId") String userId,
-                                            @RequestParam("roleType") RoleType roleType,
-                                            HttpServletRequest request) throws MessException {
+    ResponseEntityDto<MessUser> addOrEditStudentDataToMessUser(@RequestParam("id")int id, @RequestParam("messId")int messId,
+                                                              @RequestParam("breakFast")int breakfast,
+                                                              @RequestParam("lunch")int lunch, @RequestParam("dinner")int dinner,
+                                                              @RequestParam("foodType") FoodType foodType,
+                                                              @RequestParam("userId") String userId,
+                                                              @RequestParam("roleType") RoleType roleType,
+                                                              HttpServletRequest request) throws MessException {
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
-        MessUser messUser = messService.addOrEditStudentDataToMessUser(id, Integer.parseInt(userId), roleType, messId, breakfast, lunch, dinner,foodType);
+        ResponseEntityDto<MessUser> messUser = messService.addOrEditStudentDataToMessUser(id, Integer.parseInt(userId), roleType, messId, breakfast, lunch, dinner,foodType);
         return messUser;
     }
 
     @PostMapping("/deleteStudentMessUserData")
     public @ResponseBody
-    String deleteStudentMessUserData(@RequestParam("messUserId") int messUserId,
+    ResponseEntityDto<MessUser> deleteStudentMessUserData(@RequestParam("messUserId") int messUserId,
                                      @RequestParam("userId") String userId,
                                      @RequestParam("roleType") RoleType roleType,
                                      HttpServletRequest request) throws MessException {
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
-        String replyData = messService.deleteStudentMessUserData(Integer.parseInt(userId), roleType, messUserId);
+        ResponseEntityDto<MessUser> replyData = messService.deleteStudentMessUserData(Integer.parseInt(userId), roleType, messUserId);
         return replyData;
     }
 

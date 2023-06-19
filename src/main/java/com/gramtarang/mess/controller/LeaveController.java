@@ -1,6 +1,7 @@
 package com.gramtarang.mess.controller;
 
 import com.gramtarang.mess.common.MessException;
+import com.gramtarang.mess.dto.ResponseEntityDto;
 import com.gramtarang.mess.entity.Feedback;
 import com.gramtarang.mess.entity.LeaveData;
 import com.gramtarang.mess.entity.MessUser;
@@ -26,30 +27,30 @@ public class LeaveController {
     }
 
     @PostMapping("/addOrEditLeave")
-    public LeaveData addOrEditLeave(@RequestParam("leaveId")int leaveId, @RequestParam("leaveTypeId")int leaveTypeId,
-                                    @RequestParam("startDate")Date startDate, @RequestParam("endDate") Date endDate,
-                                    @RequestParam("reason")String reason, @RequestParam("leaveStatusId")int leaveStatusId,
-                                    @RequestParam("parentName")String parentName, @RequestParam("parentPhoneNo")String parentPhoneNo,
-                                    @RequestParam("hostelId")int hostelId,
-                                    @RequestParam("userId") String userId,
-                                    @RequestParam("roleType") RoleType roleType,
-                                    HttpServletRequest request) throws MessException {
+    public ResponseEntityDto<LeaveData> addOrEditLeave(@RequestParam("leaveId")int leaveId, @RequestParam("leaveTypeId")int leaveTypeId,
+                                                      @RequestParam("startDate")Date startDate, @RequestParam("endDate") Date endDate,
+                                                      @RequestParam("reason")String reason, @RequestParam("leaveStatusId")int leaveStatusId,
+                                                      @RequestParam("parentName")String parentName, @RequestParam("parentPhoneNo")String parentPhoneNo,
+                                                      @RequestParam("hostelId")int hostelId,
+                                                      @RequestParam("userId") String userId,
+                                                      @RequestParam("roleType") RoleType roleType,
+                                                      HttpServletRequest request) throws MessException {
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
-        LeaveData leave = leaveService.addOrEditLeave(Integer.parseInt(userId), roleType, leaveId, leaveTypeId, startDate, endDate,
+        ResponseEntityDto<LeaveData> leave = leaveService.addOrEditLeave(Integer.parseInt(userId), roleType, leaveId, leaveTypeId, startDate, endDate,
                 reason, parentName, parentPhoneNo, hostelId);
         return leave;
     }
 
     @PostMapping("/deleteLeave")
     public @ResponseBody
-    String deleteLeave(@RequestParam("leaveId") int leaveId,
-                       @RequestParam("userId") String userId,
-                       @RequestParam("roleType") RoleType roleType,
-                       HttpServletRequest request) throws MessException {
+    ResponseEntityDto<LeaveData> deleteLeave(@RequestParam("leaveId") int leaveId,
+                                             @RequestParam("userId") String userId,
+                                             @RequestParam("roleType") RoleType roleType,
+                                             HttpServletRequest request) throws MessException {
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
-        String replyData = leaveService.deleteLeave(Integer.parseInt(userId), roleType, leaveId);
+        ResponseEntityDto<LeaveData> replyData = leaveService.deleteLeave(Integer.parseInt(userId), roleType, leaveId);
         return replyData;
     }
 

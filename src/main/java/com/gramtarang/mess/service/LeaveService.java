@@ -1,6 +1,7 @@
 package com.gramtarang.mess.service;
 
 import com.gramtarang.mess.common.MessException;
+import com.gramtarang.mess.dto.ResponseEntityDto;
 import com.gramtarang.mess.entity.*;
 import com.gramtarang.mess.entity.auditlog.AuditOperation;
 import com.gramtarang.mess.entity.auditlog.Status;
@@ -8,6 +9,7 @@ import com.gramtarang.mess.enums.LeaveStatus;
 import com.gramtarang.mess.enums.LeaveType;
 import com.gramtarang.mess.enums.RoleType;
 import com.gramtarang.mess.repository.*;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,8 +43,9 @@ public class LeaveService {
         this.auditLog = auditLog;
     }
 
-    public LeaveData addOrEditLeave(int userId, RoleType roleType, int leaveId, int leaveTypeId, Date startDate, Date endDate,
-                                   String reason, String parentName, String parentPhoneNo, int hostelId) throws MessException {
+    public ResponseEntityDto<LeaveData> addOrEditLeave(int userId, RoleType roleType, int leaveId, int leaveTypeId, Date startDate, Date endDate,
+                                                      String reason, String parentName, String parentPhoneNo, int hostelId) throws MessException {
+        ResponseEntityDto<LeaveData> listOfLeaveData = new ResponseEntityDto<>();
         Optional<User> user = userRepository.findById(userId);
         LeaveData leave = null;
         if (roleType == RoleType.STUDENT) {
@@ -53,6 +56,8 @@ public class LeaveService {
                 } else {
                     leave = leaveRepository.findById(leaveId).get();
                     if ((leave.getStatus() == LeaveStatus.APPROVED) || (leave.getStatus() == LeaveStatus.REJECTED)) {
+                        listOfLeaveData.setMessage("Can't update the leave data");
+                        listOfLeaveData.setStatus(false);
                         throw new MessException("Can't update the leave data");
                     }
                 }
@@ -69,12 +74,17 @@ public class LeaveService {
                 }
                 leave = leaveRepository.save(leave);
                 leaveRepository.flush();
+                listOfLeaveData.setData(leave);
+                listOfLeaveData.setStatus(true);
+                listOfLeaveData.setMessage("SuccessFully added the leave data for student " + user.get().getUserName());
                 if (leaveId == 0)
                     auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.SUCCESS, "Created LeaveData :" + leave + "RoleType:" + roleType);
                 else
                     auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.SUCCESS, "Updated LeaveData :" + leave + "RoleType:" + roleType);
 
             } catch (Exception ex) {
+                listOfLeaveData.setStatus(false);
+                listOfLeaveData.setMessage("Couldn't added the leave data for student " + user.get().getUserName());
                 if(leaveId == 0)
                     auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.FAIL, "Created LeaveData :" + leave + "RoleType:" + roleType + " Exception:" + ex);
                 else
@@ -82,23 +92,30 @@ public class LeaveService {
             }
         }
 
-        return leave;
+        return listOfLeaveData;
     }
 
-    public String deleteLeave(int userId, RoleType roleType, int leaveId) throws MessException {
+    public ResponseEntityDto<LeaveData> deleteLeave(int userId, RoleType roleType, int leaveId) throws MessException {
         Optional<User> user = userRepository.findById(userId);
+        ResponseEntityDto<LeaveData> deletedResponseData = new ResponseEntityDto<>();
         Optional<LeaveData> leave = leaveRepository.findById(leaveId);
         if (roleType != RoleType.ADMIN) {
             try {
                 leaveRepository.deleteById(leaveId);
+                deletedResponseData.setMessage("Successfully deleted the leave data");
+                deletedResponseData.setStatus(true);
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.SUCCESS, "Delete LeaveData :" + leave + "RoleType:" + roleType);
             } catch(Exception ex) {
+                deletedResponseData.setMessage("Failed to delete the leave data");
+                deletedResponseData.setStatus(false);
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.FAIL, "Delete LeaveData :" + leave + "RoleType:" + roleType + " Exception:" + ex);
             }
         } else {
+            deletedResponseData.setStatus(false);
+            deletedResponseData.setMessage("Can't delete the data for " + roleType);
             throw new MessException(roleType + " can't delete the data");
         }
-        return "Success";
+        return deletedResponseData;
     }
 
     public List<LeaveData> listOfLeavesByStudent(int userId, RoleType roleType) throws MessException {

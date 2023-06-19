@@ -1,6 +1,7 @@
 package com.gramtarang.mess.controller;
 
 import com.gramtarang.mess.common.MessException;
+import com.gramtarang.mess.dto.ResponseEntityDto;
 import com.gramtarang.mess.entity.Maintenance;
 import com.gramtarang.mess.enums.MaintenanceStatus;
 import com.gramtarang.mess.enums.MaintenanceType;
@@ -49,15 +50,15 @@ public class MaintenanceController {
 
     @PostMapping("/addOrEditMaintenanceDetails")
     public @ResponseBody
-    Maintenance addOrUpdate(@RequestParam("maintenanceId") int maintenanceId,
-                            @RequestParam("userName")String userName,
-                            @RequestParam("hostelName") int hostelId,
-                            @RequestParam("description") String description,
-                            @RequestParam("maintenanceStatus") String maintenanceStatus,
-                            @RequestParam("maintenanceType") String maintenanceType,
-                            @RequestParam("userId") String userId,
-                            @RequestParam("roleType") RoleType roleType,
-                            HttpServletRequest request) throws MessException
+    ResponseEntityDto<Maintenance> addOrUpdate(@RequestParam("maintenanceId") int maintenanceId,
+                                              @RequestParam("userName")String userName,
+                                              @RequestParam("hostelName") int hostelId,
+                                              @RequestParam("description") String description,
+                                              @RequestParam("maintenanceStatus") String maintenanceStatus,
+                                              @RequestParam("maintenanceType") String maintenanceType,
+                                              @RequestParam("userId") String userId,
+                                              @RequestParam("roleType") RoleType roleType,
+                                              HttpServletRequest request) throws MessException
     {
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
@@ -66,7 +67,7 @@ public class MaintenanceController {
 
     @PostMapping("/editMaintenanceDetailsByAdmin")
     public @ResponseBody
-    Maintenance editMaintenanceDetailsByAdmin(@RequestParam("maintenanceId") int maintenanceId,
+    ResponseEntityDto<Maintenance> editMaintenanceDetailsByAdmin(@RequestParam("maintenanceId") int maintenanceId,
                             @RequestParam("maintenanceStatus") String maintenanceStatus,
                             @RequestParam("userId") String userId,
                             @RequestParam("roleType") RoleType roleType,
@@ -79,7 +80,7 @@ public class MaintenanceController {
 
     @PostMapping("/changeStatus")
     public @ResponseBody
-    Maintenance changeStatus(@RequestParam(value = "maintenanceStatus")MaintenanceStatus maintenanceStatus,
+    ResponseEntityDto<Maintenance> changeStatus(@RequestParam(value = "maintenanceStatus")MaintenanceStatus maintenanceStatus,
                              @RequestParam(value = "userId") Integer userId,
                              @RequestParam(value = "maintenanceId") Integer maintenanceId,
                              @RequestParam("roleType") RoleType roleType,
@@ -102,7 +103,7 @@ public class MaintenanceController {
 
     @PostMapping("/deleteMaintenance")
     public @ResponseBody
-    String deleteMaintenance(@RequestParam("maintenanceId")int maintenanceId, @RequestParam("userId") int userId, @RequestParam("roleType") RoleType roleType) throws MessException {
+    ResponseEntityDto<Maintenance> deleteMaintenance(@RequestParam("maintenanceId")int maintenanceId, @RequestParam("userId") int userId, @RequestParam("roleType") RoleType roleType) throws MessException {
         return  maintenanceService.deleteMaintenance(maintenanceId, userId, roleType);
     }
 }
