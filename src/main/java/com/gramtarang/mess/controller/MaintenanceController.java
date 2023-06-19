@@ -54,7 +54,6 @@ public class MaintenanceController {
                                               @RequestParam("userName")String userName,
                                               @RequestParam("hostelName") int hostelId,
                                               @RequestParam("description") String description,
-                                              @RequestParam("maintenanceStatus") String maintenanceStatus,
                                               @RequestParam("maintenanceType") String maintenanceType,
                                               @RequestParam("userId") String userId,
                                               @RequestParam("roleType") RoleType roleType,
@@ -62,7 +61,7 @@ public class MaintenanceController {
     {
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
-        return maintenanceService.addOrEdit(Integer.parseInt(userId), roleType, maintenanceId,userName, hostelId, description, maintenanceStatus, maintenanceType);
+        return maintenanceService.addOrEdit(Integer.parseInt(userId), roleType, maintenanceId,userName, hostelId, description, maintenanceType);
     }
 
     @PostMapping("/editMaintenanceDetailsByAdmin")

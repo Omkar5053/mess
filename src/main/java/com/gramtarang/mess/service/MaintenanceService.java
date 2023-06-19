@@ -55,7 +55,7 @@ public class MaintenanceService {
          }
     }
 
-    public ResponseEntityDto<Maintenance> addOrEdit(int userId, RoleType roleType, int maintenanceId, String userName, int hostelId, String description, String maintenanceStatus, String maintenanceType) throws MessException{
+    public ResponseEntityDto<Maintenance> addOrEdit(int userId, RoleType roleType, int maintenanceId, String userName, int hostelId, String description, String maintenanceType) throws MessException{
         ResponseEntityDto<Maintenance> maintenanceResponseData = new ResponseEntityDto<>();
         Maintenance maintenance1 = null;
         Optional<User> user = userRepository.findById(userId);
