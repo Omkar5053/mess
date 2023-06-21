@@ -62,4 +62,6 @@ public class HostelController {
         return hostelService.getHostelById(hostel_id);
     }
 
+
+
 }

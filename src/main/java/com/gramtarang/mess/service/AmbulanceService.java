@@ -163,4 +163,22 @@ public class AmbulanceService {
         }
         return ambulanceRequests;
     }
+
+    public ResponseEntityDto<AmbulanceRequest> getRequests(int userId) throws MessException{
+        ResponseEntityDto<AmbulanceRequest> ambulanceRequests = new ResponseEntityDto<>();
+        try{
+            Optional<User> user = userRepository.findById(userId);
+            if(user.isPresent()){
+                List<AmbulanceRequest> data = ambulanceRequestRepository.findAllRequestsByUser(user.get().getUserName());
+                    ambulanceRequests.setListOfData(data);
+                    ambulanceRequests.setMessage("Successfully listed All Ambulance Requests");
+                    ambulanceRequests.setStatus(true);
+            }
+        } catch (Exception e) {
+            ambulanceRequests.setMessage("Can't List the Ambulances Requests");
+            ambulanceRequests.setStatus(false);
+            throw new MessException("Can't List the Ambulance Requests");
+        }
+        return ambulanceRequests;
+    }
 }

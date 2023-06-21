@@ -107,4 +107,8 @@ public class FeedbackService {
         List<Feedback> feedbackList = feedbackRepository.findAll();
         return feedbackList;
     }
+
+    public List<Feedback> listOfFeedbackByUser(int userId) {
+        return feedbackRepository.findAllByUser(userId);
+    }
 }

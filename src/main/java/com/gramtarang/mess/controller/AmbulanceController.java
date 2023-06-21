@@ -37,6 +37,13 @@ public class AmbulanceController {
         return ambulanceService.getAllRequests(Integer.parseInt(userId));
     }
 
+    @PostMapping("/getAllRequestByUser")
+    public @ResponseBody
+    ResponseEntityDto<AmbulanceRequest> getAllRequestByUser(@RequestParam(value = "userId") String userId, HttpServletRequest request) throws MessException
+    {
+        return ambulanceService.getRequests(Integer.parseInt(userId));
+    }
+
     @PostMapping("/addOrEditAmbulance")
     public @ResponseBody
     ResponseEntityDto<Ambulance> addOrEditAmbulance(

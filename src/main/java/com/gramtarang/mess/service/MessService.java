@@ -48,8 +48,9 @@ public class MessService {
 //    }
 
 
-    public Mess addOrUpdateMess(int userId, RoleType roleType, int messId, String messName) throws MessException {
+    public ResponseEntityDto<Mess> addOrUpdateMess(int userId, RoleType roleType, int messId, String messName) throws MessException {
         Optional<User> user = userRepository.findById(userId);
+        ResponseEntityDto<Mess> messData = new ResponseEntityDto<>();
         int status = 0;
         Mess mess = null;
         try {
@@ -58,29 +59,37 @@ public class MessService {
                 if (mess == null) {
                     mess = new Mess();
                     status = 1;
+                    messData.setStatus(true);
+                    messData.setMessage("Mess Added Successfully!!");
                 } else {
+                    messData.setStatus(false);
                     throw new MessException("Already " + messName + " exists");
                 }
             } else {
                mess = messRepository.findById(messId).get();
+                messData.setStatus(true);
+                messData.setMessage("Mess Updated Successfully!!");
                status = 2;
             }
             mess.setMessName(messName);
             mess.setUser(user.get());
-            messRepository.save(mess);
+            mess = messRepository.save(mess);
+            messData.setData(mess);
             if (status == 1) {
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.SUCCESS, "Created MessData :" + mess + "RoleType:" + roleType);
             } else {
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.SUCCESS, "Updated MessData :" + mess + "RoleType:" + roleType);
             }
-            return mess;
         } catch (Exception ex) {
+            messData.setStatus(false);
+            messData.setMessage("Server Error");
             if (status == 1) {
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.CREATE, Status.FAIL, "Created MessData :" + mess + "RoleType:" + roleType);
             } else {
                 auditLog.createAudit(user.get().getUserName(), AuditOperation.MODIFY, Status.FAIL, "Updated MessData :" + mess + "RoleType:" + roleType);
             }            throw new MessException(String.valueOf(ex));
         }
+        return messData;
     }
 
     public void delete(int userId, RoleType roleType, Integer messId) throws MessException {

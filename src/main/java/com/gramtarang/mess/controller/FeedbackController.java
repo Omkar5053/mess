@@ -55,6 +55,16 @@ public class FeedbackController {
         return feedbackList;
     }
 
+    @PostMapping("/listOfFeedbacksByUser")
+    public @ResponseBody
+    List<Feedback> listOfFeedbacksByUser(
+                                   @RequestParam("userId") String userId,
+                                   HttpServletRequest request) throws MessException {
+
+        List<Feedback> feedbackList = feedbackService.listOfFeedbackByUser(Integer.parseInt(userId));
+        return feedbackList;
+    }
+
     @PostMapping("/listOfFeedbacks")
     public @ResponseBody
     List<Feedback> listOfFeedbacks(HttpServletRequest request) throws MessException {

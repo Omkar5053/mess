@@ -79,7 +79,7 @@ public class MaintenanceController {
 
     @PostMapping("/changeStatus")
     public @ResponseBody
-    ResponseEntityDto<Maintenance> changeStatus(@RequestParam(value = "maintenanceStatus")MaintenanceStatus maintenanceStatus,
+    ResponseEntityDto<Maintenance> changeStatus(@RequestParam(value = "maintenanceStatus") MaintenanceStatus maintenanceStatus,
                              @RequestParam(value = "userId") Integer userId,
                              @RequestParam(value = "maintenanceId") Integer maintenanceId,
                              @RequestParam("roleType") RoleType roleType,

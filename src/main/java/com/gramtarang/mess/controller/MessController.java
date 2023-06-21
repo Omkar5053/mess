@@ -118,7 +118,7 @@ public class MessController {
 
     @PostMapping("/addOrUpdateMess")
     public @ResponseBody
-    Mess addOrUpdateHostel(@RequestParam("messName")String messName,
+    ResponseEntityDto<Mess> addOrUpdateHostel(@RequestParam("messName")String messName,
                      @RequestParam("messId") int messId,
                      @RequestParam("userId") int userId,
                      @RequestParam("roleType") RoleType roleType,

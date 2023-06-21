@@ -85,7 +85,14 @@ public class AuthController {
 
     }
 
+    @PostMapping("/getUsers")
+    public @ResponseBody
+    List<User> userList() throws MessException
+    {
 
+        return userService.getList();
+
+    }
 
     @PostMapping("/add")
     public @ResponseBody
@@ -121,9 +128,18 @@ public class AuthController {
             return userService.delete(userId);
         }
         return null;
-
     }
 
+    @PostMapping("/getUser")
+    public @ResponseBody
+    User getUserById(
+            @RequestParam(value = "userId") String userId,
+            HttpServletRequest request) throws MessException
+    {
+
+        return userService.get(Integer.parseInt(userId));
+
+    }
 
 
 }

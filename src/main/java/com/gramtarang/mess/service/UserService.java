@@ -126,6 +126,14 @@ public class UserService {
         return userList;
     }
 
+    public List<User> getList() {
+        return userRepository.findAll();
+    }
+
+    public User get(int userId) {
+        return userRepository.findById(userId).get();
+    }
+
 //    private User listOfStudents(User user) {
 //        User user1 = new User();
 //        if(user.getUserType() == UserType.HOSTELLER && user.getHostel() == null){
