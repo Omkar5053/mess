@@ -234,4 +234,8 @@ public class MessService {
 //            auditLog.createAudit(user.get().getUserName(), AuditOperation.DELETE, Status.FAIL, "Deleted HostelData :" + mess + "RoleType:" + roleType + " Exception:" + ex);
 //        }
 //    }
+
+    public MessUser getMessByUserId(int userId) {
+        return messUserRepository.findAllMessByUser(userId);
+    }
 }

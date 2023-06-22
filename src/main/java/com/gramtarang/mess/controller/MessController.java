@@ -146,6 +146,13 @@ public class MessController {
         return messList;
     }
 
+    @PostMapping("/getMessByUserId")
+    public @ResponseBody
+    MessUser getHostelById(@RequestParam (value = "userId") String userId,
+                       HttpServletRequest request) throws MessException{
+        return messService.getMessByUserId(Integer.parseInt(userId));
+    }
+
 
 
 }

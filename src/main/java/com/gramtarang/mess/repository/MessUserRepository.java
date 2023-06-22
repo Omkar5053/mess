@@ -12,4 +12,6 @@ public interface MessUserRepository extends JpaRepository<MessUser, Integer> {
 
 //    @Query("from MessUser as m where m.user.userType = :userType")
     List<MessUser> findByUserUserType(UserType userType);
+    @Query(value= "SELECT * from mess_user ha where ha.user_id = :user_id", nativeQuery = true)
+    MessUser findAllMessByUser(int user_id);
 }

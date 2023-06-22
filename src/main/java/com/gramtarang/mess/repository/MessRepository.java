@@ -14,4 +14,5 @@ public interface MessRepository extends JpaRepository<Mess, Integer> {
 
     Mess findByMessName(String messName);
 
+
 }
