@@ -1,8 +1,11 @@
 package com.gramtarang.mess.enums;
 
+import com.gramtarang.mess.common.UserStatus;
+
 public enum AttendanceStatus {
-    PRESENT(0),
-    ABSENT(1);
+    ABSENT(0),
+    PRESENT(1);
+
 
     private int id;
 
@@ -16,5 +19,16 @@ public enum AttendanceStatus {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public static AttendanceStatus valueOf(int id) {
+        switch (id) {
+            case 0:
+                return ABSENT;
+            case 1:
+                return PRESENT;
+            default:
+                return ABSENT;
+        }
     }
 }

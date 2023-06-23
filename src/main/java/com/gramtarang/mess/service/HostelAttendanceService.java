@@ -11,6 +11,7 @@ import com.gramtarang.mess.repository.StudentDataRepository;
 import com.gramtarang.mess.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -79,7 +80,7 @@ public class HostelAttendanceService {
         if(user.isPresent())
         {
             hostelAttendance.setAttendanceStatus(AttendanceStatus.ABSENT);
-            hostelAttendance.setDate(LocalDateTime.now());
+            hostelAttendance.setDate(LocalDate.now());
             hostelAttendance.setUser(user.get());
             return hostelAttendanceRepository.save(hostelAttendance);
         }
@@ -92,7 +93,7 @@ public class HostelAttendanceService {
         if(user.isPresent())
         {
             hostelAttendance.setAttendanceStatus(AttendanceStatus.PRESENT);
-            hostelAttendance.setDate(LocalDateTime.now());
+            hostelAttendance.setDate(LocalDate.now());
             hostelAttendance.setUser(user.get());
             return hostelAttendanceRepository.save(hostelAttendance);
         }
