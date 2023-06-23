@@ -16,4 +16,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query(value= "SELECT * from user u where u.hostel_id = :hostel_id", nativeQuery = true)
     List<User> findUsersByHostel_HostelId(Integer hostel_id);
+
+    User findUserByUserName(String userName);
 }

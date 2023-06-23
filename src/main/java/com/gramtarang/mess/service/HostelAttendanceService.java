@@ -10,10 +10,11 @@ import com.gramtarang.mess.repository.HostelAttendanceRepository;
 import com.gramtarang.mess.repository.StudentDataRepository;
 import com.gramtarang.mess.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,12 +24,20 @@ public class HostelAttendanceService {
     private final UserRepository userRepository;
     private final StudentDataRepository studentDataRepository;
 
+    private  MyExcelHelper myExcelHelper;
+
+
+
     public HostelAttendanceService(HostelAttendanceRepository hostelAttendanceRepository,
                                    UserRepository userRepository,
-                                   StudentDataRepository studentDataRepository) {
+                                   StudentDataRepository studentDataRepository,
+                                   MyExcelHelper myExcelHelper
+                                 ) {
         this.hostelAttendanceRepository = hostelAttendanceRepository;
         this.userRepository = userRepository;
         this.studentDataRepository = studentDataRepository;
+        this.myExcelHelper = myExcelHelper;
+
     }
 
 
@@ -44,27 +53,32 @@ public class HostelAttendanceService {
             absentIds.add(d.getUser().getUserId());
         }
         try{
-
-            for(Integer id : userIds){
-                System.out.println(id);
-                absentIds.remove(id);
-                returnedData = addingAttendance(id);
-                hostelAttendanceRepository.flush();
-                if(returnedData != null) {
-                    data.add(returnedData);
+            List<HostelAttendance> todayAttendances = hostelAttendanceRepository.findHostelAttendancesByDate(LocalDate.now());
+            if(todayAttendances.size() == 0){
+                for(Integer id : userIds){
+                    System.out.println(id);
+                    absentIds.remove(id);
+                    returnedData = addingAttendance(id);
+                    hostelAttendanceRepository.flush();
+                    if(returnedData != null) {
+                        data.add(returnedData);
+                    }
                 }
-            }
-            for (int i:absentIds) {
-                absentsUsers = addingAbsentUsers(i);
-                hostelAttendanceRepository.flush();
-                if(absentsUsers != null)
-                {
-                    data.add(absentsUsers);
+                for (int i:absentIds) {
+                    absentsUsers = addingAbsentUsers(i);
+                    hostelAttendanceRepository.flush();
+                    if(absentsUsers != null)
+                    {
+                        data.add(absentsUsers);
+                    }
                 }
+                attendances.setListOfData(data);
+                attendances.setMessage("SUCCESS");
+                attendances.setStatus(true);
+            } else{
+                attendances.setMessage("Today Attendance Already Submitted!");
+                attendances.setStatus(false);
             }
-            attendances.setListOfData(data);
-            attendances.setMessage("SUCCESS");
-            attendances.setStatus(true);
         } catch (Exception e) {
             attendances.setMessage("Server Error");
             attendances.setStatus(false);
@@ -79,7 +93,7 @@ public class HostelAttendanceService {
         if(user.isPresent())
         {
             hostelAttendance.setAttendanceStatus(AttendanceStatus.ABSENT);
-            hostelAttendance.setDate(LocalDateTime.now());
+            hostelAttendance.setDate(LocalDate.now());
             hostelAttendance.setUser(user.get());
             return hostelAttendanceRepository.save(hostelAttendance);
         }
@@ -92,10 +106,26 @@ public class HostelAttendanceService {
         if(user.isPresent())
         {
             hostelAttendance.setAttendanceStatus(AttendanceStatus.PRESENT);
-            hostelAttendance.setDate(LocalDateTime.now());
+            hostelAttendance.setDate(LocalDate.now());
             hostelAttendance.setUser(user.get());
             return hostelAttendanceRepository.save(hostelAttendance);
         }
         return null;
+    }
+
+    public ResponseEntityDto<HostelAttendance> saveFile(MultipartFile file) throws MessException{
+        ResponseEntityDto<HostelAttendance> response = new ResponseEntityDto<>();
+        try {
+            List<HostelAttendance> attendances = myExcelHelper.convertExcelToListOfProduct(file.getInputStream());
+            attendances = this.hostelAttendanceRepository.saveAll(attendances);
+            response.setMessage("Attendance Uploaded Successfully!!!");
+            response.setListOfData(attendances);
+            response.setStatus(true);
+        } catch (IOException e) {
+            response.setMessage("Something is Wrong!!!");
+            response.setStatus(false);
+            throw new MessException("Error in Uploading Attendances");
+        }
+        return response;
     }
 }

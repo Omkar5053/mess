@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gramtarang.mess.enums.AttendanceStatus;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -13,8 +14,8 @@ public class HostelAttendance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int hostel_attendance_id;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MMM-yyyy hh:mm:ss")
-    private LocalDateTime date;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MMM-yyyy")
+    private LocalDate date;
 
     @Enumerated(value = EnumType.ORDINAL)
     private AttendanceStatus attendanceStatus;
@@ -31,11 +32,11 @@ public class HostelAttendance {
         this.hostel_attendance_id = hostel_attendance_id;
     }
 
-    public LocalDateTime getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
