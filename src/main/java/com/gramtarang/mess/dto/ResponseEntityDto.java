@@ -12,6 +12,10 @@ public class ResponseEntityDto<T> {
     public ResponseEntityDto() {
     }
 
+    public ResponseEntityDto(String message) {
+        this.message = message;
+    }
+
     public ResponseEntityDto(String message, boolean status, List<T> listOfData, T data) {
         this.message = message;
         this.status = status;
