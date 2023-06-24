@@ -10,6 +10,7 @@ import com.gramtarang.mess.service.FeedbackService;
 import com.gramtarang.mess.service.LeaveService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -27,14 +28,18 @@ public class LeaveController {
     }
 
     @PostMapping("/addOrEditLeave")
-    public ResponseEntityDto<LeaveData> addOrEditLeave(@RequestParam("leaveId")int leaveId, @RequestParam("leaveTypeId")int leaveTypeId,
-                                                      @RequestParam("startDate")Date startDate, @RequestParam("endDate") Date endDate,
-                                                      @RequestParam("reason")String reason, @RequestParam("leaveStatusId")int leaveStatusId,
-                                                      @RequestParam("parentName")String parentName, @RequestParam("parentPhoneNo")String parentPhoneNo,
-                                                      @RequestParam("hostelId")int hostelId,
-                                                      @RequestParam("userId") String userId,
-                                                      @RequestParam("roleType") RoleType roleType,
-                                                      HttpServletRequest request) throws MessException {
+    public ResponseEntityDto<LeaveData> addOrEditLeave(@RequestParam("leaveId")int leaveId,
+                                                       @RequestParam("leaveTypeId")int leaveTypeId,
+                                                       @RequestParam("startDate")@DateTimeFormat(pattern = "yyyy-MM-dd")Date startDate,
+                                                       @RequestParam("endDate")@DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
+                                                       @RequestParam("reason")String reason,
+                                                       @RequestParam("leaveStatusId")int leaveStatusId,
+                                                       @RequestParam("parentName")String parentName,
+                                                       @RequestParam("parentPhoneNo")String parentPhoneNo,
+                                                       @RequestParam("hostelId")int hostelId,
+                                                       @RequestParam("userId") String userId,
+                                                       @RequestParam("roleType") RoleType roleType,
+                                                       HttpServletRequest request) throws MessException {
 //        String userId = (String) request.getSession().getAttribute("USERID");
 //        RoleType roleType = (RoleType) request.getSession().getAttribute("ROLE-TYPE");
         ResponseEntityDto<LeaveData> leave = leaveService.addOrEditLeave(Integer.parseInt(userId), roleType, leaveId, leaveTypeId, startDate, endDate,

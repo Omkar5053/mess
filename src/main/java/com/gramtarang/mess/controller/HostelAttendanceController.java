@@ -7,6 +7,7 @@ import com.gramtarang.mess.entity.HostelAttendance;
 import com.gramtarang.mess.enums.RoleType;
 import com.gramtarang.mess.service.HostelAttendanceImportService;
 import com.gramtarang.mess.service.HostelAttendanceService;
+import com.gramtarang.mess.service.MyExcelHelper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -28,9 +29,12 @@ public class HostelAttendanceController {
 
     private HostelAttendanceImportService hostelAttendanceImportService;
 
-    public HostelAttendanceController(HostelAttendanceService hostelAttendanceService, HostelAttendanceImportService hostelAttendanceImportService) {
+    private MyExcelHelper myExcelHelper;
+
+    public HostelAttendanceController(HostelAttendanceService hostelAttendanceService, HostelAttendanceImportService hostelAttendanceImportService,MyExcelHelper myExcelHelper) {
         this.hostelAttendanceService = hostelAttendanceService;
         this.hostelAttendanceImportService = hostelAttendanceImportService;
+        this.myExcelHelper = myExcelHelper;
     }
 
     @PostMapping("/addAttendance")
@@ -92,5 +96,17 @@ public class HostelAttendanceController {
             result = new ResponseDto(errorMessage);
         }
         return result;
+    }
+
+    @PostMapping("/addAttendanceByExcel")
+    public @ResponseBody
+    ResponseEntityDto<HostelAttendance> addAttendances(
+            @RequestParam("file") MultipartFile file,
+            HttpServletRequest request) throws MessException
+    {
+        if (myExcelHelper.checkExcelFormat(file)) {
+            return hostelAttendanceService.saveFile(file);
+        }
+        return new ResponseEntityDto<HostelAttendance>("Please Upload Excel FIle Only!!!");
     }
 }

@@ -8,24 +8,18 @@ import com.gramtarang.mess.entity.HostelAttendance;
 import com.gramtarang.mess.entity.User;
 import com.gramtarang.mess.enums.AttendanceStatus;
 import com.gramtarang.mess.repository.HostelAttendanceRepository;
-import com.gramtarang.mess.repository.StudentDataRepository;
 import com.gramtarang.mess.repository.UserRepository;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -123,9 +117,14 @@ public class HostelAttendanceImportService extends ImportBaseClass {
                 System.out.println("Date:" + date);
                 String status = getString(row, RegistrationCols.AttendanceStatus.ordinal());
                 System.out.println("Status:" + status);
-               // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//                LocalDate parsedDate = LocalDate.parse(date);
-                HostelAttendance hostelAttendance = hostelAttendanceRepository.findByUser(user.getUserId());
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                String arr[] = date.split("/");
+                int y = Integer.parseInt(arr[0]);
+                int m = Integer.parseInt(arr[1]);
+                int d= Integer.parseInt(arr[2]);
+                LocalDate localDate = LocalDate.of(y, m, d);
+                System.out.println(localDate);
+                HostelAttendance hostelAttendance = hostelAttendanceRepository.findByUserAndDate(user.getUserId(), localDate);
                 System.out.println("HostelAttendance:" + hostelAttendance);
                 if (hostelAttendance == null) {
                     HostelAttendance hostelAttendance1 = new HostelAttendance();
@@ -134,22 +133,19 @@ public class HostelAttendanceImportService extends ImportBaseClass {
                     hostelAttendance1.setUser(user);
                     hostelAttendance = hostelAttendanceRepository.save(hostelAttendance1);
                     System.out.println("HostelAttendanceData:" + hostelAttendance1.getHostel_attendance_id());
-//                    hostelAttendanceRepository.flush();
                     dto.incrementSuccessCount();
                     dto.incrementTotalCount();
                     dto.incrementCreatedCount();
-                   // logger.info("New Attendance for: " +  registrationNo + " for hostel:" + user.getHostel().getHostelName() + " and floor:" + user.getHostel().getNoOfFloors() + " is " + status + " on " + date);
+
                 }
                 else {
                     hostelAttendance.setAttendanceStatus(AttendanceStatus.valueOf(status));
-                    hostelAttendance.setDate(LocalDate.now());
+//                    hostelAttendance.setDate(LocalDate.now());
                     hostelAttendance = hostelAttendanceRepository.save(hostelAttendance);
                     System.out.println("HostelAttendanceUpdate:" + hostelAttendance.getHostel_attendance_id());
-//                    hostelAttendanceRepository.flush();
                     dto.incrementSuccessCount();
                     dto.incrementTotalCount();
                     dto.incrementUpdatedCount();
-                   // logger.info("How did this come again ? " + registrationNo + ":" + user.getHostel().getHostelName() + ":" + user.getHostel().getNoOfFloors() + " on " + status);
                 }
             }
 
@@ -157,7 +153,7 @@ public class HostelAttendanceImportService extends ImportBaseClass {
                 this.currentResponse = new ResponseDto("These are the registration numbers not available: " + outputRegistrationList.toString());
                 dto.setProcessingComplete(true);
             }
-
+            return dto;
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {

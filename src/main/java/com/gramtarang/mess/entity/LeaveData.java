@@ -1,5 +1,6 @@
 package com.gramtarang.mess.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gramtarang.mess.common.BaseDto;
 import com.gramtarang.mess.enums.LeaveStatus;
 import com.gramtarang.mess.enums.LeaveType;
@@ -15,7 +16,9 @@ public class LeaveData extends BaseDto {
     private int leaveId;
     @Enumerated(value = EnumType.ORDINAL)
     private LeaveType leaveType;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date startDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date endDate;
     private String reason;
     @Enumerated(value = EnumType.ORDINAL)
